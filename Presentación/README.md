@@ -5,3 +5,6 @@ Colaboradores:
 
 - Sergio Orlando Rojas Parra
   Product Owner
+
+- Daniel Steven Osorno Ortiz
+  Desarrollador
