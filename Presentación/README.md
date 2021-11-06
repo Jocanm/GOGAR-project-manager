@@ -8,3 +8,6 @@ Colaboradores:
 
 - Daniel Steven Osorno Ortiz
   Desarrollador
+
+- Clara Inés Giraldo Cardona
+Analista 
