@@ -11,3 +11,6 @@ Colaboradores:
 
 - Clara Inés Giraldo Cardona
 Analista 
+
+- Jose Luis Angarita Mendoza
+  Scrum Master
