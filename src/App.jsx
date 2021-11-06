@@ -1,10 +1,15 @@
 import React from 'react'
+import PublicLayout from './layout/PublicLayout'
+import Index from './pages/Index'
+import './App.css'
 
 const App = () => {
     return (
-        <div>
-            Project Manager
-        </div>
+        <>
+            <PublicLayout>
+                <Index/>
+            </PublicLayout>
+        </>
     )
 }
 

@@ -1,0 +1,48 @@
+.grid-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+
+    grid-template-areas:
+        "header"
+        "content"
+    ;
+}
+
+.header {
+    grid-area: header;
+}
+
+.content {
+    grid-area: content;
+}
+
+body {
+    font-family: "FaktSoft", Arial, Helvetica, sans-serif;
+    background-color: #2C394B;
+}
+
+.index {
+    /* background-color: #082032; */
+    background-color: #2C394B;
+}
+
+.lista-index p {
+    color: white;
+    margin-left: 1rem;
+}
+
+.lista-index li {
+    margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+    .lista-index li {
+        margin-right: 30px;
+    }
+}
+
+.transicion {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 250ms;
+}
