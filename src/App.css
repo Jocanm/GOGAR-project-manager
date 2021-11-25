@@ -1,3 +1,7 @@
+body {
+    background-color: #2C394B;
+}
+
 .grid-container {
     display: grid;
     grid-template-rows: auto 1fr;
@@ -16,10 +20,6 @@
     grid-area: content;
 }
 
-body {
-    font-family: "FaktSoft", Arial, Helvetica, sans-serif;
-    background-color: #2C394B;
-}
 
 .index {
     /* background-color: #082032; */
@@ -45,4 +45,47 @@ body {
     transition-property: background-color, border-color, color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 250ms;
+}
+
+@media (min-width: 0px) {
+    .item-sidebar:hover {
+        color:white;
+    }
+}
+
+@media (min-width: 768px) {
+    .item-sidebar:hover {
+        color:red
+    }
+}
+
+.tabla {
+    width: 100%;
+    margin: 10px;
+    /* border-radius: ; */
+    /* overflow-y: scroll; */
+}
+
+.tabla td,
+.tabla th {
+    padding: 8px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    /* border: 1px solid #ddd; */
+}
+
+.tabla th {
+    /* background-color: #04aa46; */
+    /* @apply bg-warmGray-500; */
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+}
+
+.tabla tr:nth-child(even) {
+    /* background-color: #f2f2f2; */
+}
+
+.tabla tr:hover {
+    /* background-color: #ddd; */
 }
