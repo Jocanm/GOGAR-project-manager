@@ -27,29 +27,32 @@ const SidebarMobile = () => {
                     </li>
                 </ul>
             </header>
-            <SidebarList show={show} />
+            <SidebarList show={show} setShow={setShow} />
         </div>
     )
 }
 
-const SidebarList = ({ show }) => {
+const SidebarList = ({ show,setShow }) => {
 
     return (
-        <ul className={`bg-custom-fourth absolute sidebar-list top-20 left-0 right-0 bottom-0 opacity-80 ${show || "hidden"} animate__animated animate__fadeInDown animate__faster border-t-2 flex flex-col items-center justify-center`}>
+        <ul className={`bg-custom-fourth absolute sidebar-list top-20 left-0 right-0 bottom-0 z-10 opacity-80 ${show || "hidden"} animate__animated animate__fadeInDown animate__faster border-t-2 flex flex-col items-center justify-center`}>
             <SidebarListItem
                 to="/"
                 title="Home"
                 icon="fas fa-home"
+                onClick={()=>setShow(false)}
             />
             <SidebarListItem
                 to="/app/usuarios"
                 title="Users"
                 icon="fas fa-user"
+                onClick={()=>setShow(false)}
             />
             <SidebarListItem
                 to="/"
                 title="Logout"
                 icon="fas fa-sign-out-alt"
+                onClick={()=>setShow(false)}
             />
         </ul>
     )
@@ -68,7 +71,8 @@ const SidebarListItem = ({ to, title, icon }) => {
                 )
             }
         >
-            <div className="flex items-center">
+            <div 
+            className="flex items-center">
                 <i className={icon}></i>
                 <span className="ml-2">{title}</span>
             </div>

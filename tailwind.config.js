@@ -34,12 +34,17 @@ module.exports = {
         first:'#082032',
         second:'#2C394B',
         third:"#334756",
-        fourth:'#FF4C29'
+        fourth:'#FF4C29',
+        five:"#f57a62"
       }
     }
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ['disabled'],
+      backgroundColor: ['disabled'],
+      textColor: ['disabled']
+    },
   },
   plugins: [],
 }

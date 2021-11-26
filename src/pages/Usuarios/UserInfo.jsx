@@ -1,12 +1,13 @@
-import { useMutation, useQuery } from '@apollo/client'
-import { nanoid } from 'nanoid'
 import React, { useEffect, useState } from 'react'
+import { useMutation, useQuery } from '@apollo/client'
 import { useParams } from 'react-router'
 import { EDITAR_USUARIO } from '../../graphql/usuarios/mutations'
 import { GET_USUARIO } from '../../graphql/usuarios/queries'
-import useFormData from '../../hooks/useFormData'
 import { Enum_EstadoUsuario } from '../../utils/enum'
-import ReactLoading from 'react-loading'
+import useFormData from '../../hooks/useFormData'
+import Input from '../../components/Input'
+import DropDown from '../../components/DropDown'
+import ButtonLoading from '../../components/ButtonLoading'
 
 const UserInfo = () => {
 
@@ -60,12 +61,12 @@ const UserInfo = () => {
 
     return (
         <div className="pb-7">
-            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-20 md:mx-32">
+            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20">
                 <span className="text-xl sm:text-3xl text-white font-semibold">Usuario:</span>
                 <h1 className="text-xl sm:text-3xl text-white font-semibold my-4" >{usuario.nombre} {usuario.apellido} - {usuario.rol}</h1>
                 <span className="text-xl sm:text-3xl text-white font-semibold">Estado actual - {usuario.estado}</span>
             </div>
-            <div className="py-12 px-10 bg-custom-third mt-8 mx-4 rounded-md shadow-xl md:px-20 md:mx-32">
+            <div className="py-12 px-10 bg-custom-third mt-8 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20">
                 <h2 className="text-xl sm:text-3xl text-white font-semibold my-4">Actualizar Información del usuario</h2>
                 <form
                     onSubmit={submitForm}
@@ -88,7 +89,7 @@ const UserInfo = () => {
                         label="Correo:"
                         name="correo"
                         defaultValue={usuario.correo}
-                        type={"text"}
+                        type={"email"}
                     />
                     <Input
                         label="Identificacion:"
@@ -105,7 +106,7 @@ const UserInfo = () => {
                     />
                     <ButtonLoading
                         disabled={Object.keys(formData).length === 0}
-                        loading={mutationLoading}
+                        loading={false}
                         text='Confirmar'
                     />
                 </form>
@@ -113,60 +114,5 @@ const UserInfo = () => {
         </div>
     )
 }
-
-const Input = ({ label, name, defaultValue, type }) => {
-    return (
-        <label htmlFor={name} className='flex flex-col my-3'>
-            <span>{label}</span>
-            <input
-                required
-                type={type}
-                name={name}
-                className='input'
-                defaultValue={defaultValue}
-            />
-        </label>
-    );
-};
-
-const DropDown = ({ label, name, defaultValue = '', required, options }) => {
-    const [selectedValue, setSelectedValue] = useState(defaultValue);
-    const optionsSelect = [['', 'Seleccione una opción', true], ...Object.entries(options)];
-    useEffect(() => {
-        setSelectedValue(defaultValue);
-    }, [defaultValue]);
-    return (
-        <label htmlFor={name} className='flex flex-col my-3'>
-            <span>{label}</span>
-            <select
-                required={required}
-                name={name}
-                className='input'
-                value={selectedValue}
-                onChange={(e) => setSelectedValue(e.target.value)}
-            >
-                {optionsSelect.map((o) => {
-                    return (
-                        <option key={nanoid()} value={o[0]} disabled={o[2] ?? false}>
-                            {o[1]}
-                        </option>
-                    );
-                })}
-            </select>
-        </label>
-    );
-};
-
-const ButtonLoading = ({ disabled, loading, text }) => {
-    return (
-        <button
-            disabled={disabled}
-            type='submit'
-            className='bg-indigo-700 text-white font-bold text-lg py-3 px-6  rounded-xl hover:bg-indigo-500 shadow-md my-2 disabled:opacity-50 disabled:bg-gray-700'
-        >
-            {loading ? <ReactLoading type='spin' height={30} width={30} /> : text}
-        </button>
-    );
-};
 
 export default UserInfo

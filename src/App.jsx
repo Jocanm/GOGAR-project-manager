@@ -1,36 +1,87 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PublicLayout from './layout/PublicLayout'
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Index from './pages/Index'
 import IndexUsuarios from './pages/Usuarios/Index'
 import PrivateLayout from './layout/PrivateLayout'
 import './App.css'
 import UserInfo from './pages/Usuarios/UserInfo'
+import Registro from './pages/auth/Registro'
+import Login from './pages/auth/Login'
+import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthContext } from './context/AuthContext'
+import { setContext } from '@apollo/client/link/context';
 
 // const httpLink = createHttpLink({
-//     uri:"http://localhost:4000/graphql"
+//     uri: "http://localhost:4000/graphql"
 // })
 
+// const authLink = setContext((_, { headers }) => {
+//     // get the authentication token from local storage if it exists
+//     const token = JSON.parse(localStorage.getItem('token'));
+//     // return the headers to the context so httpLink can read them
+//     return {
+//         headers: {
+//             ...headers,
+//             authorization: token ? `Bearer ${token}` : '',
+//         },
+//     };
+// });
+
+// const client = new ApolloClient({
+//     cache: new InMemoryCache(),
+//     link: authLink.concat(httpLink)
+// })
+
+const httpLink = createHttpLink({
+    uri: 'http://localhost:4000/graphql',
+});
+
+const authLink = setContext((_, { headers }) => {
+    // get the authentication token from local storage if it exists
+    const token = JSON.parse(localStorage.getItem('token'));
+    // return the headers to the context so httpLink can read them
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    };
+});
+
 const client = new ApolloClient({
-    uri: "http://localhost:4000/graphql",
-    cache: new InMemoryCache()
-})
+    cache: new InMemoryCache(),
+    link: authLink.concat(httpLink),
+});
 
 const App = () => {
+
+    const [authToken, setAuthToken] = useState("")
+
+    const setToken = (token) => {
+        setAuthToken(token)
+        if (token) {
+            localStorage.setItem('token', JSON.stringify(token))
+        }
+    }
+
     return (
         <ApolloProvider client={client}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<PublicLayout />}>
-                        <Route path="" element={<Index />} />
-                    </Route>
-                    <Route path="/app" element = {<PrivateLayout/>}>
-                        <Route path="usuarios" element={<IndexUsuarios />} />
-                        <Route path="usuarios/:_id" element={<UserInfo />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
+            <AuthContext.Provider value={{ setToken, authToken, setAuthToken }}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<PublicLayout />}>
+                            <Route path="" element={<Index />} />
+                            <Route path="auth/registro" element={<Registro />} />
+                            <Route path="auth/login" element={<Login />} />
+                        </Route>
+                        <Route path="/app" element={<PrivateLayout />}>
+                            <Route path="usuarios" element={<IndexUsuarios />} />
+                            <Route path="usuarios/:_id" element={<UserInfo />} />
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+            </AuthContext.Provider>
         </ApolloProvider>
     )
 }

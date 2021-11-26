@@ -89,3 +89,18 @@ body {
 .tabla tr:hover {
     /* background-color: #ddd; */
 }
+
+@media (min-width: 768px) {
+    .register {
+        width: 50vw;
+        background-color: red;
+    }
+}
+
+.input-s{
+    @apply block border border-gray-200 w-full p-3 pl-10 rounded mb-2 focus:outline-none focus:border-custom-fourth
+}
+
+.wrong{
+    outline: 3px solid rgb(192, 45, 45);
+}

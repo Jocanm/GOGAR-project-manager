@@ -2,7 +2,7 @@ import React from 'react'
 
 const Index = () => {
     return (
-        <div className="w-full h-full px-7 py-16 lg:py-36 lg:pl-12">
+        <div className="w-full h-full px-7 py-16 lg:py-28 lg:pl-12">
             <h1
                 className="text-2xl sm:text-4xl lg:text-6xl text-white "
             >Plataforma creada para la administración de tus proyectos. Manten un rumbo mientras palinificas, desarrollas y entregas tus <span className="text-custom-fourth">productos</span> :)</h1>

@@ -9,10 +9,15 @@ body {
 } */
 
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&display=swap");
-body{
+
+body {
     font-family: 'Raleway', sans-serif;
 }
 
 .input {
-    @apply p-2 border border-indigo-200 focus:outline-none focus:border-indigo-800 rounded-md shadow-sm;
-  }
+    /* @apply p-2 border border-indigo-200 focus:outline-none focus:border-indigo-800 rounded-md shadow-sm; */
+    @apply block border border-gray-200 w-full p-3 rounded mb-2 focus:outline-none focus:border-custom-fourth;
+}
+.input-search {
+    @apply block border border-gray-200 w-full p-3 pl-6 rounded mb-2 focus:outline-none focus:border-custom-fourth;
+}
