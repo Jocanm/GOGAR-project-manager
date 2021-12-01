@@ -36,10 +36,10 @@ export const LOGIN = gql `
     }
 `;
 
-export const VALIDATE_TOKEN = gql `
+export const REFRESCAR_TOKEN = gql `
 
-    mutation ValidarToken {
-        ValidarToken {
+    mutation RefrescarToken {
+        RefrescarToken {
             token
             error
         }

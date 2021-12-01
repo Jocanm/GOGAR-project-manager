@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 import { GET_USUARIOS } from '../../graphql/usuarios/queries'
 import ReactLoading from 'react-loading';
 import { Link } from 'react-router-dom';
+import PrivateRoute from '../../components/PrivateRoute';
 
 
 const IndexUsuarios = () => {
@@ -27,7 +28,7 @@ const IndexUsuarios = () => {
     )
 
     return (
-        <>
+        <PrivateRoute roleList={["LIDER","ADMINISTRADOR"]}>
             <div className="bg-white mt-3 relative mx-auto rounded-lg container">
                 <i className="fas fa-search absolute top-4 left-3 text-gray-600"></i>
                 <input 
@@ -37,7 +38,7 @@ const IndexUsuarios = () => {
                 placeholder="Busca un usuario"
                 type="text" />
             </div>
-            <section className="container mx-auto pt-6 md:p-6 md:hidden">
+            <section className="container mx-auto pt-6 xl:p-6 xl:hidden">
                 <div className="w-full overflow-hidden rounded-lg shadow-lg">
                     <div className="w-full overflow-x-auto">
                         <table className="w-full">
@@ -84,7 +85,7 @@ const IndexUsuarios = () => {
                     </div>
                 </div>
             </section>
-            <section className="hidden md:block container mx-auto pt-6 md:p-">
+            <section className="hidden xl:block container mx-auto pt-6 md:p-">
                 <div className="w-full overflow-hidden rounded-lg shadow-lg">
                     <div className="w-full overflow-x-auto">
                         <table className="w-full">
@@ -126,7 +127,7 @@ const IndexUsuarios = () => {
                     </div>
                 </div>
             </section>
-        </>
+        </PrivateRoute>
     )
 }
 

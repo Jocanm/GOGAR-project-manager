@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useAuthContext } from '../context/AuthContext'
+import PrivateComponent from './PrivateComponent'
 
 const SidebarMobile = () => {
 
@@ -32,28 +34,31 @@ const SidebarMobile = () => {
     )
 }
 
-const SidebarList = ({ show,setShow }) => {
+const SidebarList = ({ show, setShow }) => {
 
     return (
         <ul className={`bg-custom-fourth absolute sidebar-list top-20 left-0 right-0 bottom-0 z-10 opacity-80 ${show || "hidden"} animate__animated animate__fadeInDown animate__faster border-t-2 flex flex-col items-center justify-center`}>
             <SidebarListItem
-                to="/"
+                to="/home"
                 title="Home"
                 icon="fas fa-home"
-                onClick={()=>setShow(false)}
+                onClick={() => setShow(false)}
             />
-            <SidebarListItem
-                to="/app/usuarios"
-                title="Users"
-                icon="fas fa-user"
-                onClick={()=>setShow(false)}
-            />
-            <SidebarListItem
+            <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
+                <SidebarListItem
+                    to="/usuarios"
+                    title="Users"
+                    icon="fas fa-user"
+                    onClick={() => setShow(false)}
+                />
+            </PrivateComponent>
+            <Logout />
+            {/* <SidebarListItem
                 to="/"
                 title="Logout"
                 icon="fas fa-sign-out-alt"
                 onClick={()=>setShow(false)}
-            />
+            /> */}
         </ul>
     )
 }
@@ -71,10 +76,36 @@ const SidebarListItem = ({ to, title, icon }) => {
                 )
             }
         >
-            <div 
-            className="flex items-center">
+            <div
+                className="flex items-center">
                 <i className={icon}></i>
                 <span className="ml-2">{title}</span>
+            </div>
+        </NavLink>
+    )
+}
+
+const Logout = () => {
+
+    const { setToken } = useAuthContext()
+
+    return (
+        <NavLink
+            exact
+            to="/auth/login"
+            className={
+                ({ isActive }) => (
+                    isActive
+                        ? "text-3xl bg-white md:bg-custom-fourth py-2 px-5 rounded-lg mb-4 md:text-xl "
+                        : "text-3xl py-2 px-5 mb-4 md:text-xl item-sidebar"
+                )
+            }
+        >
+            <div
+                onClick={() => setToken(null)}
+                className="flex items-center">
+                <i className="fas fa-sign-out-alt"></i>
+                <span className="ml-2">{"Logout"}</span>
             </div>
         </NavLink>
     )
@@ -87,20 +118,23 @@ export const SidebarDesktop = () => {
             <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8">GOGAR</h1>
             <ul className="flex flex-col justify-center">
                 <SidebarListItem
-                    to="/"
+                    to="/home"
                     title="Home"
                     icon="fas fa-home"
                 />
-                <SidebarListItem
-                    to="/app/usuarios"
-                    title="Users"
-                    icon="fas fa-user"
-                />
-                <SidebarListItem
+                <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
+                    <SidebarListItem
+                        to="/usuarios"
+                        title="Users"
+                        icon="fas fa-user"
+                    />
+                </PrivateComponent>
+                <Logout />
+                {/* <SidebarListItem
                     to="/"
                     title="Logout"
                     icon="fas fa-sign-out-alt"
-                />
+                /> */}
             </ul>
         </div>
     )

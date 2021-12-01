@@ -31,7 +31,7 @@ const Login = () => {
         if (data) {
             if (data.Login.token) {
                 setToken(data.Login.token)
-                navigate("/app/usuarios")
+                navigate("/home")
                 console.log("Redirigiendo")
             }
         }

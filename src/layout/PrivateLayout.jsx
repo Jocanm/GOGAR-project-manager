@@ -1,21 +1,38 @@
 import { useMutation } from '@apollo/client'
-import React, { useEffect } from 'react'
-import { Outlet } from 'react-router'
+import React, { useEffect, useState } from 'react'
+import { Outlet, useNavigate } from 'react-router'
 import Sidebar, { SidebarDesktop } from '../components/Sidebar'
 import { useAuthContext } from '../context/AuthContext'
-import { VALIDATE_TOKEN } from '../graphql/auth/mutations'
+import { REFRESCAR_TOKEN } from '../graphql/auth/mutations'
 
 const PrivateLayout = () => {
 
-    const {authToken,setToken,setAuthToken} = useAuthContext()
+    const {setToken,authToken} = useAuthContext()
+    // const [loadingAuth,setLoadingAuth] = useState(true)
 
-    const [validarToken,{data,loading,error}] = useMutation(VALIDATE_TOKEN)
+    const navigate = useNavigate()
+
+    const [refrescarToken,{data,loading,error}] = useMutation(REFRESCAR_TOKEN)
 
     useEffect(()=>{
+        refrescarToken()
+    },[refrescarToken])
 
-        validarToken()
+    useEffect(()=>{
+        console.log("dm:",data)
 
-    },[])
+        if(data){
+            if(data.RefrescarToken.token){
+                setToken(data.RefrescarToken.token)
+            }else{
+                // setToken(null)
+                navigate("/auth/login")
+            }
+        }
+
+    },[data,setToken,navigate])
+
+    if(loading) return (<div>Cargando....</div>)
 
     return (
         <div className="h-screen w-full md:flex">

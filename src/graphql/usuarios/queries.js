@@ -1,20 +1,5 @@
 import {gql} from '@apollo/client'
 
-// export const GET_USUARIOS = gql`
-
-// query Usuarios {
-//     Usuarios {
-//     _id  
-//     nombre
-//     rol
-//     identificacion
-//     inscripciones {
-//         estado
-//         }
-//     }
-// }
-// `;
-
 export const GET_USUARIOS = gql`
     query Usuarios {
         Usuarios {

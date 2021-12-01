@@ -8,7 +8,7 @@ const Navbar = () => {
     return (
         <ul className={`flex flex-col justify-center shadow-2xl text-warmGray-300 text-xl font-semibold hover:bg-white hover:shadow-2xl hover:text-custom-first py-5 ${show && "bg-white text-custom-first"} md:bg-custom-second md:text-warmGray-300 px-7 transicion`}>
             <div className="flex justify-between w-full">
-                <Link to="/app/usuarios">
+                <Link to="/home">
                     <li className="text-3xl tracking-widest">GOGAR</li>
                 </Link>
                 <li className="hidden md:block relative top-1">

@@ -31,7 +31,7 @@ const Registro = () => {
         if (data) {
             if (data.Registro.token) {
                 setToken(data.Registro.token)
-                navigate('/app/usuarios')
+                navigate('/home/')
             }
         }
     }, [data])
