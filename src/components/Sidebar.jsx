@@ -36,6 +36,8 @@ const SidebarMobile = () => {
 
 const SidebarList = ({ show, setShow }) => {
 
+    const [open, setOpen] = useState(false)
+
     return (
         <ul className={`bg-custom-fourth absolute sidebar-list top-20 left-0 right-0 bottom-0 z-10 opacity-80 ${show || "hidden"} animate__animated animate__fadeInDown animate__faster border-t-2 flex flex-col items-center justify-center`}>
             <SidebarListItem
@@ -52,18 +54,35 @@ const SidebarList = ({ show, setShow }) => {
                     onClick={() => setShow(false)}
                 />
             </PrivateComponent>
+            <li
+                className="text-3xl py-2 px-5 mb-4 md:text-lg item-sidebar cursor-pointer"
+            >
+                <div
+                    onClick={() => setOpen(!open)}
+                    className="flex items-center">
+                    <i className={"fas fa-tasks"}></i>
+                    <span className="mx-2">{"Proyectos"}</span>
+                    <i className={`fas fa-chevron-${open ? "up" : "down"} text-sm relative top-px`}></i>
+                </div>
+            </li>
+            <SidebarListItem
+                to="/crear"
+                icon="fas fa-plus"
+                title="Crear"
+                extra={`ml-2 animate__animated animate__faster ${open ? "block animate__fadeInDown" : "hidden"}`}
+            />
+            <SidebarListItem
+                to="/proyectos"
+                icon="fas fa-book-reader"
+                title="Listar"
+                extra={`ml-2 -mt-4 animate__animated animate__faster ${open ? "block animate__fadeInDown" : "hidden"}`}
+            />
             <Logout />
-            {/* <SidebarListItem
-                to="/"
-                title="Logout"
-                icon="fas fa-sign-out-alt"
-                onClick={()=>setShow(false)}
-            /> */}
         </ul>
     )
 }
 
-const SidebarListItem = ({ to, title, icon }) => {
+const SidebarListItem = ({ to, title, icon, extra = "" }) => {
     return (
         <NavLink
             exact
@@ -71,8 +90,8 @@ const SidebarListItem = ({ to, title, icon }) => {
             className={
                 ({ isActive }) => (
                     isActive
-                        ? "text-3xl bg-white md:bg-custom-fourth py-2 px-5 rounded-lg mb-4 md:text-xl "
-                        : "text-3xl py-2 px-5 mb-4 md:text-xl item-sidebar"
+                        ? `text-3xl bg-white md:bg-custom-fourth py-2 px-5 rounded-lg mb-4 md:text-lg ${extra}`
+                        : `text-3xl py-2 px-5 mb-4 md:text-lg item-sidebar ${extra}`
                 )
             }
         >
@@ -96,8 +115,8 @@ const Logout = () => {
             className={
                 ({ isActive }) => (
                     isActive
-                        ? "text-3xl bg-white md:bg-custom-fourth py-2 px-5 rounded-lg mb-4 md:text-xl "
-                        : "text-3xl py-2 px-5 mb-4 md:text-xl item-sidebar"
+                        ? "text-3xl bg-white md:bg-custom-fourth py-2 px-5 rounded-lg mb-4 md:text-lg "
+                        : "text-3xl py-2 px-5 mb-4 md:text-lg item-sidebar"
                 )
             }
         >
@@ -113,33 +132,68 @@ const Logout = () => {
 
 export const SidebarDesktop = () => {
 
+    const [open, setOpen] = useState(false)
+
     return (
-        <div className="bg-white hidden md:block h-full w-40 lg:w-48 overflow-visible px-4 lg:px-8 pt-10 animate__animated animate__fadeInLeft animate__faster">
-            <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8">GOGAR</h1>
-            <ul className="flex flex-col justify-center">
-                <SidebarListItem
-                    to="/home"
-                    title="Home"
-                    icon="fas fa-home"
-                />
-                <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
+        <>
+            <div className="bg-white hidden md:block h-full w-44 lg:w-48 overflow-visible px-2 lg:px-4 pt-10 animate__animated animate__fadeInLeft animate__faster">
+                <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8 text-center">GOGAR</h1>
+                <ul className="flex flex-col justify-center">
                     <SidebarListItem
-                        to="/usuarios"
-                        title="Users"
-                        icon="fas fa-user"
+                        to="/home"
+                        title="Home"
+                        icon="fas fa-home"
                     />
-                </PrivateComponent>
-                <Logout />
-                {/* <SidebarListItem
-                    to="/"
-                    title="Logout"
-                    icon="fas fa-sign-out-alt"
-                /> */}
-            </ul>
-        </div>
+                    <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
+                        <SidebarListItem
+                            to="/usuarios"
+                            title="Users"
+                            icon="fas fa-user"
+                        />
+                    </PrivateComponent>
+                    <li
+                        className="text-3xl py-2 px-5 mb-4 md:text-lg item-sidebar cursor-pointer"
+                    >
+                        <div
+                            onClick={() => setOpen(!open)}
+                            className="flex items-center">
+                            <i className={"fas fa-tasks"}></i>
+                            <span className="mx-2">{"Proyectos"}</span>
+                            <i className={`fas fa-chevron-${open ? "up" : "down"} text-sm relative top-px`}></i>
+                        </div>
+                    </li>
+                    <PrivateComponent roleList={["LIDER"]}>
+                        <SidebarListItem
+                            to="/crear"
+                            icon="fas fa-plus"
+                            title="Crear"
+                            extra={`ml-6 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
+                        />
+                    </PrivateComponent>
+                    <SidebarListItem
+                        to="/proyectos"
+                        icon="fas fa-book-reader"
+                        title="Listar"
+                        extra={`ml-6 -mt-4 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
+                    />
+                    <PrivateComponent roleList={"ESTUDIANTE"}>
+                        <SidebarListItem
+                            to="/inscritos"
+                            icon="fas fa-folder-open"
+                            title="Inscritos"
+                            extra={`ml-6 -mt-4 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
+                        />
+                    </PrivateComponent>
+                    <Logout />
+                </ul>
+            </div>
+
+        </>
     )
 
 }
+
+
 
 
 export default SidebarMobile

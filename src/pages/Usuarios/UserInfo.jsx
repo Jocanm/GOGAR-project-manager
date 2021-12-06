@@ -8,8 +8,13 @@ import useFormData from '../../hooks/useFormData'
 import Input from '../../components/Input'
 import DropDown from '../../components/DropDown'
 import ButtonLoading from '../../components/ButtonLoading'
+import ReactLoading from 'react-loading';
+import { toast, ToastContainer } from 'react-toastify'
+import { useNavigate } from 'react-router'
 
 const UserInfo = () => {
+
+    const navigate = useNavigate()
 
     const { form, formData, updateFormData } = useFormData(null);
     const { _id } = useParams()
@@ -56,49 +61,55 @@ const UserInfo = () => {
     }
 
     if (loading) return (
-        <h1 className="text-6xl">Loading....</h1>
+        <div className="h-screen mx-auto flex items-center justify-center">
+            <ReactLoading type="spin" height="20%" width="20%" />
+        </div>
     )
 
     return (
         <div className="pb-7">
-            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20">
-                <span className="text-xl sm:text-3xl text-white font-semibold">Usuario:</span>
-                <h1 className="text-xl sm:text-3xl text-white font-semibold my-4" >{usuario.nombre} {usuario.apellido} - {usuario.rol}</h1>
-                <span className="text-xl sm:text-3xl text-white font-semibold">Estado actual - {usuario.estado}</span>
+            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20 relative">
+                <span className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold">Usuario:</span>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold my-4" >{usuario.nombre} {usuario.apellido} - {usuario.rol}</h1>
+                <span className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold">Estado actual - {usuario.estado}</span>
+                <i 
+                className="fas fa-undo absolute text-4xl top-10 right-8 text-custom-five cursor-pointer hover:text-custom-fourth"
+                onClick={()=>navigate("/usuarios")}
+                ></i>
             </div>
             <div className="py-12 px-10 bg-custom-third mt-8 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20">
-                <h2 className="text-xl sm:text-3xl text-white font-semibold my-4">Actualizar Información del usuario</h2>
+                <h2 className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold my-4">Actualizar Información del usuario:</h2>
                 <form
                     onSubmit={submitForm}
                     onChange={updateFormData}
                     ref={form}
                     className="flex flex-col">
                     <Input
-                        label="Nombre:"
+                        label="Nombre"
                         name="nombre"
                         defaultValue={usuario.nombre}
                         type={"text"}
                     />
                     <Input
-                        label="Apellido:"
+                        label="Apellido"
                         name="apellido"
                         defaultValue={usuario.apellido}
                         type={"text"}
                     />
                     <Input
-                        label="Correo:"
+                        label="Correo"
                         name="correo"
                         defaultValue={usuario.correo}
                         type={"email"}
                     />
                     <Input
-                        label="Identificacion:"
+                        label="Identificacion"
                         name="identificacion"
                         defaultValue={usuario.identificacion}
                         type={"text"}
                     />
                     <DropDown
-                        label='Estado de la persona:'
+                        label='Estado de la persona'
                         name='estado'
                         defaultValue={usuario.estado}
                         required={true}

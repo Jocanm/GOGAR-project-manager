@@ -43,48 +43,44 @@ const Login = () => {
     }, [data, navigate, setToken, loading])
 
     return (
-        <div>
-            <div className="min-h-screen flex flex-col mt-11">
-                <div className="container max-w-sm mx-auto flex flex-col items-center justify-center px-2 md:max-w-none">
-                    <form
-                        onChange={updateFormData}
-                        onSubmit={submitForm}
-                        ref={form}
-                        className={`bg-white px-6 py-8 rounded shadow-md text-black w-full md:w-2/3 md:px-5 ${error && "wrong"}`}>
-                        <h1 className="mb-8 text-3xl text-center">Inicia sesión</h1>
-                        <div className="md:grid grid-cols-1">
-                            <Input
-                                name="correo"
-                                type="email"
-                                placeholder="Correo"
-                                required
-                            />
-                            <Input
-                                name="password"
-                                type="password"
-                                placeholder="Contraseña"
-                                required
-                            />
-                        </div>
-                        <section className={`text-red-600 mb-2 ${error || "hidden"}`}>
-                            Ups! Parece que el usuario o la contraseña son incorrectos :(
-                        </section>
-                        <ButtonLoading
-                            disabled={Object.keys(formData).length === 0}
-                            loading={false}
-                            text='Confirmar'
-                        />
-                    </form>
-
-                    <div className="text-white mt-6">
-                        ¿No tienes una cuenta?
-                        <Link to="/auth/registro">
-                            <span className="no-underline border-b border-blue ml-1" href="../login/">
-                                Registrate
-                            </span>.
-                        </Link>
-                    </div>
+        <div className="container max-w-sm mx-auto flex flex-col items-center justify-center px-2 md:max-w-none mt-20">
+            <form
+                onChange={updateFormData}
+                onSubmit={submitForm}
+                ref={form}
+                className={`bg-white px-6 py-8 rounded shadow-md text-black w-full md:w-2/3 md:px-5 ${error && "wrong"}`}>
+                <h1 className="mb-8 text-3xl text-center">Inicia sesión</h1>
+                <div className="md:grid grid-cols-1">
+                    <Input
+                        name="correo"
+                        type="email"
+                        placeholder="Correo"
+                        required
+                    />
+                    <Input
+                        name="password"
+                        type="password"
+                        placeholder="Contraseña"
+                        required
+                    />
                 </div>
+                <section className={`text-red-600 mb-2 ${error || "hidden"}`}>
+                    Ups! Parece que el usuario o la contraseña son incorrectos :(
+                </section>
+                <ButtonLoading
+                    disabled={Object.keys(formData).length === 0}
+                    loading={false}
+                    text='Confirmar'
+                />
+            </form>
+
+            <div className="text-white mt-6">
+                ¿No tienes una cuenta?
+                <Link to="/auth/registro">
+                    <span className="no-underline border-b border-blue ml-1" href="../login/">
+                        Registrate
+                    </span>.
+                </Link>
             </div>
         </div>
     )

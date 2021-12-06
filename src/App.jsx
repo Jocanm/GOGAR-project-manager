@@ -14,6 +14,9 @@ import { setContext } from '@apollo/client/link/context';
 import Home from './pages/Home'
 import jwtDecode from 'jwt-decode'
 import { UserContext } from './context/UserContext'
+import Crear from './pages/Proyectos/Crear'
+import Listar from './pages/Proyectos/Listar'
+import Inscritos from './pages/Proyectos/Inscritos'
 
 const httpLink = createHttpLink({
     uri: 'http://localhost:4000/graphql',
@@ -37,7 +40,7 @@ const client = new ApolloClient({
 const App = () => {
 
     const [authToken, setAuthToken] = useState("")
-    const [userData,setUserData] = useState({})
+    const [userData, setUserData] = useState({})
 
     const setToken = (token) => {
         setAuthToken(token)
@@ -51,12 +54,13 @@ const App = () => {
     useEffect(() => {
         if (authToken) {
             const decoded = jwtDecode(authToken)
-            setUserData({...decoded})
-        }   
+            console.log("DECODED:", decoded);
+            setUserData({ ...decoded })
+        }
     }, [authToken])
 
     return (
-        <UserContext.Provider value={{userData,setUserData}}>
+        <UserContext.Provider value={{ userData, setUserData }}>
             <ApolloProvider client={client}>
                 <AuthContext.Provider value={{ setToken, authToken, setAuthToken }}>
                     <BrowserRouter>
@@ -70,6 +74,9 @@ const App = () => {
                                 <Route path="home" element={<Home />} />
                                 <Route path="usuarios" element={<IndexUsuarios />} />
                                 <Route path="usuarios/:_id" element={<UserInfo />} />
+                                <Route path="crear" element={<Crear />} />
+                                <Route path="proyectos" element={<Listar />} />
+                                <Route path="inscritos" element={<Inscritos/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

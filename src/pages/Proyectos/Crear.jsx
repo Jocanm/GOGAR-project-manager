@@ -1,43 +1,21 @@
-import { useMutation } from '@apollo/client'
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router'
-import { Link } from 'react-router-dom'
-import ButtonLoading from '../../components/ButtonLoading'
-import DropDown from '../../components/DropDown'
-import Input from '../../components/Input'
-import { useAuthContext } from '../../context/AuthContext'
-import { REGISTRO } from '../../graphql/auth/mutations'
+import React from 'react'
 import useFormData from '../../hooks/useFormData'
+import Input from '../../components/Input'
+import DropDown from '../../components/DropDown'
 import { Enum_Rol } from '../../utils/enum'
+import ButtonLoading from '../../components/ButtonLoading'
 
-const Registro = () => {
+const Crear = () => {
 
     const { form, formData, updateFormData } = useFormData()
 
-    const {setToken} = useAuthContext() 
-
-    const [registro, { data, loading, error }] = useMutation(REGISTRO);
-
-    const navigate = useNavigate()
-
-    const submitForm = (e) => {
+    const submitForm = (e) =>{ 
         e.preventDefault()
-        registro({ variables: formData })
     }
 
 
-    useEffect(() => {
-        console.log("data", data)
-        if (data) {
-            if (data.Registro.token) {
-                setToken(data.Registro.token)
-                navigate('/home/')
-            }
-        }
-    }, [data])
-
     return (
-            <div className="container max-w-sm mx-auto mt-10 mb-8 md:mb-0 flex flex-col items-center justify-center px-2 md:max-w-none">
+            <div className="container max-w-sm mx-auto flex flex-col items-center justify-center px-2 md:max-w-none">
                 <form
                     onChange={updateFormData}
                     onSubmit={submitForm}
@@ -83,20 +61,12 @@ const Registro = () => {
                     </div>
                     <ButtonLoading
                         disabled={Object.keys(formData).length === 0}
-                        loading={loading}
+                        loading={false}
                         text='Confirmar'
                     />
                 </form>
-                <div className="text-white mt-6">
-                    ¿Ya tienes una cuenta?
-                    <Link to="/auth/login">
-                        <span className="no-underline border-b border-blue ml-1" href="../login/">
-                            Inicia sesión
-                        </span>.
-                    </Link>
-                </div>
             </div>
     )
 }
 
-export default Registro
+export default Crear

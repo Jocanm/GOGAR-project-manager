@@ -1,7 +1,9 @@
 const Input = ({ label = "", name, defaultValue, type, placeholder = "" }) => {
     return (
         <label htmlFor={name} className='flex flex-col my-3'>
-            <span>{label}</span>
+            <span
+            className="text-white font-bold"
+            >{label}</span>
             {
                 !placeholder ?
                     (
