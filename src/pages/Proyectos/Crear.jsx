@@ -7,6 +7,7 @@ import { useMutation } from '@apollo/client'
 import { CREAR_PROYECTO } from '../../graphql/proyectos/mutations'
 import { useNavigate } from 'react-router'
 import { CREAR_OBJETIVO } from '../../graphql/objetivos/mutation'
+import PrivateRoute from '../../components/PrivateRoute'
 
 const Crear = () => {
 
@@ -42,12 +43,12 @@ const Crear = () => {
                 }
             })
 
-            especificos.forEach((e,i)=>{
+            especificos.forEach((e, i) => {
                 crearObjetivo({
-                    variables:{
-                        tipo:"ESPECIFICO",
-                        proyecto:data.crearProyecto._id,
-                        descripcion:formData[`especifico${i+1}`]
+                    variables: {
+                        tipo: "ESPECIFICO",
+                        proyecto: data.crearProyecto._id,
+                        descripcion: formData[`especifico${i + 1}`]
                     }
                 })
             })
@@ -69,56 +70,58 @@ const Crear = () => {
     }, [especificos])
 
     return (
-        <div className="container mx-auto flex flex-col items-center justify-center md:max-w-none">
-            <form
-                onChange={updateFormData}
-                onSubmit={submitForm}
-                ref={form}
-                className="bg-white px-6 py-8 rounded shadow-md text-black w-full md:w-2/3 md:px-5">
-                <h1 className="mb-8 text-3xl text-center">Crea un nuevo proyecto</h1>
-                <div className="grid grid-cols-1 gap-0">
-                    <Input
-                        name="nombre"
-                        type="text"
-                        placeholder="Nombre del proyecto"
-                        required
+        <PrivateRoute roleList={["LIDER"]}>
+            <div className="container mx-auto flex flex-col items-center justify-center md:max-w-none">
+                <form
+                    onChange={updateFormData}
+                    onSubmit={submitForm}
+                    ref={form}
+                    className="bg-white px-6 py-8 rounded shadow-md text-black w-full md:w-2/3 md:px-5">
+                    <h1 className="mb-8 text-3xl text-center">Crea un nuevo proyecto</h1>
+                    <div className="grid grid-cols-1 gap-0">
+                        <Input
+                            name="nombre"
+                            type="text"
+                            placeholder="Nombre del proyecto"
+                            required
+                        />
+                        <Input
+                            name="presupuesto"
+                            type="number"
+                            placeholder="Presupuesto"
+                            required
+                        />
+                        <Input
+                            name="general"
+                            type="text"
+                            placeholder="Objetivo general"
+                            required
+                        />
+                        {
+                            especificos.map((e, i) => (
+                                <Input
+                                    name={`especifico${i + 1}`}
+                                    type="text"
+                                    placeholder={`Objetivo especifico ${i + 1}`}
+                                    required
+                                />
+                            ))
+                        }
+                        <button
+                            type="button"
+                            onClick={() => setEspecificos([...especificos, especificos.length + 1])}
+                            className="px-4 py-2 bg-custom-five hover:bg-custom-fourth rounded-md text-white font-bold">
+                            Agregar otro objetivo especifico
+                        </button>
+                    </div>
+                    <ButtonLoading
+                        disabled={Object.keys(formData).length === 0}
+                        loading={false}
+                        text='Crear'
                     />
-                    <Input
-                        name="presupuesto"
-                        type="number"
-                        placeholder="Presupuesto"
-                        required
-                    />
-                    <Input
-                        name="general"
-                        type="text"
-                        placeholder="Objetivo general"
-                        required
-                    />
-                    {
-                        especificos.map((e,i) => (
-                            <Input
-                                name={`especifico${i+1}`}
-                                type="text"
-                                placeholder={`Objetivo especifico ${i+1}`}
-                                required
-                            />
-                        ))
-                    }
-                    <button 
-                    type="button"
-                    onClick={() =>setEspecificos([...especificos,especificos.length+1])}
-                    className="px-4 py-2 bg-custom-five hover:bg-custom-fourth rounded-md text-white font-bold">
-                        Agregar otro objetivo especifico
-                    </button>
-                </div>
-                <ButtonLoading
-                    disabled={Object.keys(formData).length === 0}
-                    loading={false}
-                    text='Crear'
-                />
-            </form>
-        </div>
+                </form>
+            </div>
+        </PrivateRoute>
     )
 }
 
