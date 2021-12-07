@@ -8,10 +8,36 @@ export const PROYECTOS_LIDER = gql`
             _id
             nombre
             objetivos {
-            descripcion
-            tipo
+                descripcion
+                tipo
+                }
+            lider {
+                nombre
+                apellido
                 }
             }  
         }
     }
 `;
+
+export const GET_PROYECTOS = gql`
+
+query Proyectos {
+    Proyectos {
+        _id
+        nombre
+        estado
+        fase
+        objetivos {
+            tipo
+            descripcion
+        }
+    lider {
+        _id
+        nombre
+        apellido
+        }
+    }
+}
+
+`
