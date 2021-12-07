@@ -18,6 +18,7 @@ import Crear from './pages/Proyectos/Crear'
 import Listar from './pages/Proyectos/Listar'
 import Inscritos from './pages/Proyectos/Inscritos'
 
+
 const httpLink = createHttpLink({
     uri: 'http://localhost:4000/graphql',
 });
@@ -60,29 +61,31 @@ const App = () => {
     }, [authToken])
 
     return (
-        <UserContext.Provider value={{ userData, setUserData }}>
-            <ApolloProvider client={client}>
-                <AuthContext.Provider value={{ setToken, authToken, setAuthToken }}>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="/" element={<PublicLayout />}>
-                                <Route path="" element={<Index />} />
-                                <Route path="auth/registro" element={<Registro />} />
-                                <Route path="auth/login" element={<Login />} />
-                            </Route>
-                            <Route path="/" element={<PrivateLayout />}>
-                                <Route path="home" element={<Home />} />
-                                <Route path="usuarios" element={<IndexUsuarios />} />
-                                <Route path="usuarios/:_id" element={<UserInfo />} />
-                                <Route path="crear" element={<Crear />} />
-                                <Route path="proyectos" element={<Listar />} />
-                                <Route path="inscritos" element={<Inscritos/>}/>
-                            </Route>
-                        </Routes>
-                    </BrowserRouter>
-                </AuthContext.Provider>
-            </ApolloProvider>
-        </UserContext.Provider>
+        <>
+            <UserContext.Provider value={{ userData, setUserData }}>
+                <ApolloProvider client={client}>
+                    <AuthContext.Provider value={{ setToken, authToken, setAuthToken }}>
+                        <BrowserRouter>
+                            <Routes>
+                                <Route path="/" element={<PublicLayout />}>
+                                    <Route path="" element={<Index />} />
+                                    <Route path="auth/registro" element={<Registro />} />
+                                    <Route path="auth/login" element={<Login />} />
+                                </Route>
+                                <Route path="/" element={<PrivateLayout />}>
+                                    <Route path="home" element={<Home />} />
+                                    <Route path="usuarios" element={<IndexUsuarios />} />
+                                    <Route path="usuarios/:_id" element={<UserInfo />} />
+                                    <Route path="crear" element={<Crear />} />
+                                    <Route path="proyectos" element={<Listar />} />
+                                    <Route path="inscritos" element={<Inscritos />} />
+                                </Route>
+                            </Routes>
+                        </BrowserRouter>
+                    </AuthContext.Provider>
+                </ApolloProvider>
+            </UserContext.Provider>
+        </>
     )
 }
 

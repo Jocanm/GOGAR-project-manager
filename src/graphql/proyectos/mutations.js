@@ -23,3 +23,14 @@ export const CREAR_PROYECTO = gql`
 }
 
 `
+export const APROBAR_PROYECTO = gql`
+
+    mutation AprobarProyecto($_id: String!) {
+        aprobarProyecto(_id: $_id) {
+            _id
+            nombre
+            estado
+            fase  
+        }
+    }
+`

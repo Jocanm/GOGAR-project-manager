@@ -7,6 +7,7 @@ export const PROYECTOS_LIDER = gql`
         projectosLiderados {
             _id
             nombre
+            presupuesto
             objetivos {
                 descripcion
                 tipo
@@ -25,6 +26,7 @@ export const GET_PROYECTOS = gql`
 query Proyectos {
     Proyectos {
         _id
+        presupuesto
         nombre
         estado
         fase
