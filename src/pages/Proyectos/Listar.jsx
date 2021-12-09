@@ -11,6 +11,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { CREAR_INSCRIPCION } from '../../graphql/inscripciones/mutations';
 import { APROBAR_PROYECTO } from '../../graphql/proyectos/mutations';
+import { nanoid } from 'nanoid';
 
 
 const Listar = () => {
@@ -104,14 +105,14 @@ const ProyectosAdministrador = () => {
 
     const { data, loading, error } = useQuery(GET_PROYECTOS)
 
-    const [tipo, setTipo] = useState("INACTIVO")
+    const [tipo, setTipo] = useState("ACTIVO")
     const [dataFiltrada, setDataFiltrada] = useState([])
 
     useEffect(() => {
         if (data && data.Proyectos) {
             setDataFiltrada(data.Proyectos.filter(e => e.estado === tipo))
         }
-    }, [tipo])
+    }, [tipo,data])
 
     if (loading) return (
         <div className="h-screen mx-auto flex items-center justify-center">
@@ -170,7 +171,7 @@ const ProyectoItem = ({ proyecto }) => {
 
     return (
         <li
-            className={`bg-white rounded-md p-5 relative ${userData.rol === "ESTUDIANTE" ? "pb-10" : "pb-5"}`}
+            className={`bg-white rounded-md p-5 relative pb-10 ${userData.rol === "ESTUDIANTE" || userData.rol === "LIDER" ? "pb-10" : "pb-5"}`}
         >
             <h2
                 className="text-lg font-semibold mb-2"
@@ -184,7 +185,9 @@ const ProyectoItem = ({ proyecto }) => {
             <div className="mb-3">
                 {
                     objetivosEspecificos.map(e => (
-                        <div className="ml-3 mb-1">
+                        <div 
+                        key={nanoid()}
+                        className="ml-3 mb-1">
                             <i className="fas fa-check-square mr-2"></i>
                             {e.descripcion}
                         </div>
@@ -252,7 +255,7 @@ const AprobarProyecto = ({ proyecto }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        {`¿Desea activar el proyeto "${proyecto.nombre}"?`}
+                        {`¿Desea activar el proyecto "${proyecto.nombre}"?`}
                         <h3 className="mt-2 font-bold">Detalles:</h3>
                         <ul>
                             <li>Creado por: {proyecto.lider.nombre} {proyecto.lider.apellido}</li>

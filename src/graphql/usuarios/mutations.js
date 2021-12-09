@@ -9,6 +9,7 @@ mutation EditarUsuario(
     $identificacion: String! 
     $correo: String! 
     $estado: Enum_estadoUsuario!
+    $password: String
     ) {
     editarUsuario(
         _id: $_id 
@@ -17,6 +18,7 @@ mutation EditarUsuario(
         identificacion: $identificacion 
         correo: $correo 
         estado: $estado
+        password: $password
         ) {
             _id
             nombre

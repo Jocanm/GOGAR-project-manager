@@ -10,7 +10,13 @@ const Enum_EstadoUsuario = {
     NO_AUTORIZADO: 'No autorizado',
 };
 
+const Enum_EstadoUsuarioLider = {
+    PENDIENTE: 'Pendiente',
+    AUTORIZADO: 'Autorizado',
+}
+
 export {
     Enum_Rol,
-    Enum_EstadoUsuario
+    Enum_EstadoUsuario,
+    Enum_EstadoUsuarioLider
 };

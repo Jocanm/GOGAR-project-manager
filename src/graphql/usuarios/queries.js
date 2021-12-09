@@ -28,6 +28,7 @@ export const GET_USUARIO = gql`
             estado
             apellido
             rol
+            password
         }
     }
 
