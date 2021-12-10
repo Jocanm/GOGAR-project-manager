@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from 'react-router'
 import Sidebar, { Header, SidebarDesktop } from '../components/Sidebar'
 import { useAuthContext } from '../context/AuthContext'
 import { REFRESCAR_TOKEN } from '../graphql/auth/mutations'
+import { Toaster } from 'react-hot-toast';
 
 const PrivateLayout = () => {
 
@@ -39,20 +40,19 @@ const PrivateLayout = () => {
     )
 
     return (
-        <>
-            <div className="h-screen w-full md:flex">
-                <Sidebar />
-                <div className="hidden md:block min-h-full">
-                    <SidebarDesktop />
-                </div>
-                <div className="h-full w-full md:overflow-y-auto">
-                    <Header />
-                    <div className=" md:px-7 md:py-7">
-                        <Outlet />
-                    </div>
+        <div className="h-screen w-full md:flex">
+            <Sidebar />
+            <div className="hidden md:block min-h-full">
+                <SidebarDesktop />
+            </div>
+            <div className="h-full w-full md:overflow-y-auto">
+                <Header />
+                <div className=" md:px-7 md:py-7">
+                    <Outlet />
                 </div>
             </div>
-        </>
+            <Toaster />
+        </div>
     )
 }
 

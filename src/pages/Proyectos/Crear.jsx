@@ -8,6 +8,7 @@ import { CREAR_PROYECTO } from '../../graphql/proyectos/mutations'
 import { useNavigate } from 'react-router'
 import { CREAR_OBJETIVO } from '../../graphql/objetivos/mutation'
 import PrivateRoute from '../../components/PrivateRoute'
+import toast from 'react-hot-toast'
 
 const Crear = () => {
 
@@ -60,7 +61,7 @@ const Crear = () => {
         if (data && mutationData) {
             if (data.crearProyecto && mutationData.crearObjetivo) {
                 navigate("/proyectos")
-                alert("Proyecto creado")
+                toast.success("Proyecto creado")
             }
         }
     }, [data, mutationData, navigate])

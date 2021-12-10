@@ -34,3 +34,32 @@ export const APROBAR_PROYECTO = gql`
         }
     }
 `
+export const INACTIVAR_PROYECTO = gql`
+
+    mutation InactivarProyecto($_id: String!) {
+        inactivarProyecto(_id: $_id) {
+            _id
+            nombre
+            estado
+            fase
+        }
+    }
+
+`
+export const ACTUALIZAR_PROYECTO = gql`
+    mutation ActualizarProyecto($_id: String!, $nombre: String!, $presupuesto: Float!) {
+        actualizarProyecto(_id: $_id, nombre: $nombre, presupuesto: $presupuesto) {
+            _id
+            nombre
+        }
+    }
+`
+export const TERMINAR_PROYECTO = gql`
+    mutation TerminarProyecto($_id: String!) {
+        terminarProyecto(_id: $_id) {
+            nombre
+            _id  
+        }
+    }
+
+`

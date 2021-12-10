@@ -8,6 +8,8 @@ export const PROYECTOS_LIDER = gql`
             _id
             nombre
             presupuesto
+            estado
+            fase
             objetivos {
                 descripcion
                 tipo
@@ -43,3 +45,28 @@ query Proyectos {
 }
 
 `
+
+export const GET_PROYECTO = gql`
+
+    query Proyecto($_id: String!) {
+    Proyecto(_id: $_id) {
+        _id
+        nombre
+        estado
+        fase
+        presupuesto
+        inscripciones {
+            estado
+        estudiante {
+            nombre
+            apellido
+            }
+        }     
+        avances {
+            _id
+            descripcion
+            observaciones
+        }  
+    }
+}
+`;

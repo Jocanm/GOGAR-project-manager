@@ -136,7 +136,7 @@ export const SidebarDesktop = () => {
 
     return (
         <>
-            <div className="bg-white hidden md:block h-full w-44 lg:w-48 overflow-visible px-2 lg:px-4 pt-10 animate__animated animate__fadeInLeft animate__faster border-r-2 border-custom-fourth">
+            <div className="bg-white hidden md:block h-full w-44 lg:w-48 overflow-visible px-2 lg:px-4 pt-10 animate__animated animate__fadeInLeft animate__faster border-r-2">
                 <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8 text-center">GOGAR</h1>
                 <ul className="flex flex-col justify-center">
                     <SidebarListItem
@@ -200,7 +200,7 @@ export const Header = () => {
     const {userData} = useUser()
 
     return (
-        <header className="bg-white w-full text-right sticky top-0 z-10 py-2 border-b-2 hidden md:block pr-8 font-bold"> 
+        <header className="bg-white w-full text-right sticky top-0 z-10 py-2 border-b-2 shadow-xl hidden md:block pr-8 font-bold "> 
             <span className="border-b-2 border-custom-fourth">{userData.nombre} {userData.apellido} - {userData.rol}</span>
             <i 
             onClick={() =>navigate(`/usuarios/${userData._id}`)}

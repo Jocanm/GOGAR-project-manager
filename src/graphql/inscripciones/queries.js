@@ -31,3 +31,20 @@ query InscripcionesEstudiante($_id: String!) {
 
 
 `
+
+export const GET_INSCRIPCION = gql`
+
+  query Inscripcion($estudiante: String!, $proyecto: String!) {
+  Inscripcion(estudiante: $estudiante, proyecto: $proyecto) {
+  _id
+  estado  
+  proyecto {
+    nombre
+  }
+  estudiante {
+    nombre
+  }
+  }
+}
+
+`

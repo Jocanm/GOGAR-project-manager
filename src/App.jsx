@@ -17,6 +17,7 @@ import { UserContext } from './context/UserContext'
 import Crear from './pages/Proyectos/Crear'
 import Listar from './pages/Proyectos/Listar'
 import Inscritos from './pages/Proyectos/Inscritos'
+import ProjectInfo from './pages/Proyectos/ProjectInfo'
 
 
 const httpLink = createHttpLink({
@@ -78,6 +79,7 @@ const App = () => {
                                     <Route path="usuarios/:_id" element={<UserInfo />} />
                                     <Route path="crear" element={<Crear />} />
                                     <Route path="proyectos" element={<Listar />} />
+                                    <Route path="proyectos/:_id" element={<ProjectInfo />} />
                                     <Route path="inscritos" element={<Inscritos />} />
                                 </Route>
                             </Routes>

@@ -11,6 +11,8 @@ import ButtonLoading from '../../components/ButtonLoading'
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router'
 import { useUser } from '../../context/UserContext'
+import toast from 'react-hot-toast';
+
 
 const UserInfo = () => {
 
@@ -45,16 +47,16 @@ const UserInfo = () => {
 
     useEffect(() => {
         if (mutationError) {
-            alert("Error modificando el usuario")
+            toast.error("Error modificando el usuario")
         }
         if (error) {
-            alert("Error consultando al usuario")
+            toast.error("Error consultando al usuario")
         }
     }, [error, mutationError])
 
     useEffect(() => {
         if (mutationData) {
-            alert("Usuario modificado con exito!")
+            toast.success("Usuario modificado con exito!")
             navigate("/home")
         }
     }, [mutationData])
@@ -97,7 +99,7 @@ const UserInfo = () => {
                 ></i>
             </div>
             <div className="py-12 px-10 bg-custom-third mt-8 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold my-4">{`${userData._id === data.Usuario._id?"Actualiza tu información personal:":"Actualizar Información del usuario:"}`}</h2>
+                <h2 className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold my-4">{`${userData._id === data.Usuario._id ? "Actualiza tu información personal:" : "Actualizar Información del usuario:"}`}</h2>
                 <form
                     onSubmit={submitForm}
                     onChange={updateFormData}
