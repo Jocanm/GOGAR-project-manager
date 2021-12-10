@@ -8,7 +8,7 @@ import useFormData from '../../hooks/useFormData';
 import Input from '../../components/Input';
 import ButtonLoading from '../../components/ButtonLoading';
 import toast from 'react-hot-toast';
-import { ACTUALIZAR_PROYECTO, TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
+import { TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 const ProjectInfo = () => {
@@ -66,27 +66,15 @@ const ProjectInfoLider = ({ _id }) => {
         variables: { _id }
     })
 
-    const [actualizar, { data: mutationData, loading: mutationLoading, error: mutationError }] = useMutation(ACTUALIZAR_PROYECTO)
-
     const [show, setShow] = useState(false)
+    const [showInscrip,setShowInscrip] = useState(false)
 
     const { form, formData, updateFormData } = useFormData(null)
 
-    useEffect(() => {
-        console.log("Data del proyecto:", data)
-    }, [data])
-
     const submitForm = (e) => {
         e.preventDefault()
-        actualizar({ variables: { _id, ...formData, presupuesto: Number(formData.presupuesto) } })
+        toast.success("Editado")
     }
-
-    useEffect(() => {
-        if (mutationData && mutationData.actualizarProyecto) {
-            toast.success("Proyecto actualizado correctamente!")
-            setShow(false)
-        }
-    }, [mutationData])
 
     if (loading) {
         return (
@@ -98,7 +86,7 @@ const ProjectInfoLider = ({ _id }) => {
 
     return (
         <div className="pb-7 text-white flex flex-col">
-            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20 relative">
+            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 relative">
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold my-4" >{data.Proyecto.nombre}</h1>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-4">Estado actual - {data.Proyecto.estado}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Fase actual - {data.Proyecto.fase}</div>
@@ -106,15 +94,27 @@ const ProjectInfoLider = ({ _id }) => {
                     className="fas fa-undo absolute text-4xl top-10 right-8 text-custom-five cursor-pointer hover:text-custom-fourth"
                     onClick={() => navigate(-1)}
                 ></i>
+                <div className="flex">
                     <button
                         onClick={() => setShow(!show)}
-                        className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-md font-semibold relative top-4 mr-2"
+                        className="bg-white hover:bg-gray-300 text-gray-900 px-4 py-2 rounded-md font-semibold relative top-4 mr-2 w-full"
                     >
                         Actualizar datos
                     </button>
-                    <div className={`inline ${data.Proyecto.fase === "TERMINADO" && "hidden"}`}>
+                    <div className={`inline ${data.Proyecto.fase === "TERMINADO" && "hidden"} w-full`}>
                         <TerminarProyecto proyecto={data.Proyecto} />
                     </div>
+                </div>
+            </div>
+            <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 flex text-gray-900">
+                <button 
+                onClick={()=>setShowInscrip(!showInscrip)}
+                className="bg-white mr-2 hover:bg-gray-300 px-4 py-2 rounded-md font-semibold w-full">
+                    Ver inscripciones
+                </button>
+                <button className="bg-white hover:bg-gray-300 px-4 py-2 rounded-md font-semibold w-full">
+                    Ver Avances
+                </button>
             </div>
             <div className={`py-12 px-7 bg-custom-third mt-8 mx-4 rounded-md shadow-xl md:px-20 lg:mx-20 ${show || "hidden"}`}>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold my-4">Nuevos datos:</h2>
@@ -135,7 +135,12 @@ const ProjectInfoLider = ({ _id }) => {
                         defaultValue={data.Proyecto.presupuesto}
                         type={"number"}
                     />
-                    {
+                    <ButtonLoading
+                        disabled={Object.keys(formData).length === 0}
+                        loading={false}
+                        text='Confirmar'
+                    />
+                    {/* {
                         mutationLoading ?
                             (<div className="w-full mx-auto flex items-center justify-center">
                                 <ReactLoading type="spin" height="7%" width="7%" color='#FF4C29' />
@@ -145,9 +150,24 @@ const ProjectInfoLider = ({ _id }) => {
                                 loading={false}
                                 text='Confirmar'
                             />)
-                    }
+                    } */}
                 </form>
             </div>
+            {
+                showInscrip&&(<Inscripciones _id={_id}/>)
+            }
+        </div>
+    )
+}
+
+const Inscripciones = ({_id}) => {
+
+    //Aqui va el codigo que hace una busqueda de todas las inscripciones que tiene un proyecto
+    //El componente recibe el id del proyecto y se tiene que hacer un query a ese proyecto y traer todas las inscripciones
+
+    return (
+        <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 text-white">
+            lista de inscripciones
         </div>
     )
 }
@@ -179,7 +199,7 @@ const TerminarProyecto = ({ proyecto }) => {
         <>
             <button
                 onClick={() => setOpen(true)}
-                className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-md font-semibold relative top-4">{`Terminar proyecto`}<i className="fas fa-exclamation-triangle ml-2"></i>
+                className="bg-white hover:bg-gray-300 text-gray-900 px-4 py-2 rounded-md font-semibold relative top-4 w-full">{`Terminar proyecto`}<i className="fas fa-exclamation-triangle ml-2"></i>
             </button>
             <Dialog
                 open={open}
