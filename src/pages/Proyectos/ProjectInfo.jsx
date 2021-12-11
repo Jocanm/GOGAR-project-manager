@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router'
 import { useUser } from '../../context/UserContext'
 import { useMutation, useQuery } from '@apollo/client'
 import { GET_PROYECTO } from '../../graphql/proyectos/queries';
+import { GET_INSCRIPCIONES} from '../../graphql/inscripciones/queries';
 import useFormData from '../../hooks/useFormData';
 import Input from '../../components/Input';
 import ButtonLoading from '../../components/ButtonLoading';
@@ -164,6 +165,15 @@ const Inscripciones = ({_id}) => {
 
     //Aqui va el codigo que hace una busqueda de todas las inscripciones que tiene un proyecto
     //El componente recibe el id del proyecto y se tiene que hacer un query a ese proyecto y traer todas las inscripciones
+
+
+    const { data} = useQuery(GET_INSCRIPCIONES, {
+        variables: { _id }
+    })
+
+    useEffect(() => {
+        console.log("Incripciones del proyecto:", data)
+    }, [data])
 
     return (
         <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 text-white">
