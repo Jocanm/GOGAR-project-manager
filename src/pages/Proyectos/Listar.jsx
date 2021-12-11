@@ -462,6 +462,12 @@ const GenerarInscripcion = ({ proyecto }) => {
             })
         }
     }
+    useEffect(() => {
+        if (error) {
+            toast.error("Ha ocurrido un error!")
+            console.log(error)
+        }
+    }, [error])
 
     useEffect(() => {
         if (data && data.crearInscripcion) {
@@ -482,12 +488,7 @@ const GenerarInscripcion = ({ proyecto }) => {
         }
     }, [data, proyecto.nombre])
 
-    useEffect(() => {
-        if (error) {
-            toast.error("Ha ocurrido un error!")
-            console.log(error)
-        }
-    }, [error])
+    
 
 
     return (
