@@ -10,6 +10,8 @@ import ButtonLoading from '../../components/ButtonLoading';
 import toast from 'react-hot-toast';
 import { TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {GET_INSCRIPCIONES} from '../../graphql/inscripciones/queries.js';
+import DropDown from '../../components/DropDown';
 
 const ProjectInfo = () => {
 
@@ -161,15 +163,28 @@ const ProjectInfoLider = ({ _id }) => {
 }
 
 const Inscripciones = ({_id}) => {
+    
+    const[listaInscripciones,setListaInscripciones] = useState();
+    const {data: queryData, loading, error} = useQuery(GET_INSCRIPCIONES,{
+        variables: { _id }
+    });
+
+    useEffect(() => {
+        console.log(queryData);
+    }, [queryData]);
+
+    if(loading) return <div>...Loading </div>;
+
+    if (queryData.Inscripciones){
 
     //Aqui va el codigo que hace una busqueda de todas las inscripciones que tiene un proyecto
     //El componente recibe el id del proyecto y se tiene que hacer un query a ese proyecto y traer todas las inscripciones
-
-    return (
+    return ( 
         <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 text-white">
-            lista de inscripciones
+            
         </div>
     )
+    }
 }
 
 const TerminarProyecto = ({ proyecto }) => {
