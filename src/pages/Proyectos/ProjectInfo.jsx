@@ -10,7 +10,7 @@ import ButtonLoading from '../../components/ButtonLoading';
 import toast from 'react-hot-toast';
 import { TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import {GET_INSCRIPCIONES} from '../../graphql/inscripciones/queries.js';
+import { GET_INSCRIPCIONES } from '../../graphql/inscripciones/queries.js';
 import DropDown from '../../components/DropDown';
 
 const ProjectInfo = () => {
@@ -69,7 +69,7 @@ const ProjectInfoLider = ({ _id }) => {
     })
 
     const [show, setShow] = useState(false)
-    const [showInscrip,setShowInscrip] = useState(false)
+    const [showInscrip, setShowInscrip] = useState(false)
 
     const { form, formData, updateFormData } = useFormData(null)
 
@@ -109,9 +109,9 @@ const ProjectInfoLider = ({ _id }) => {
                 </div>
             </div>
             <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 flex text-gray-900">
-                <button 
-                onClick={()=>setShowInscrip(!showInscrip)}
-                className="bg-white mr-2 hover:bg-gray-300 px-4 py-2 rounded-md font-semibold w-full">
+                <button
+                    onClick={() => setShowInscrip(!showInscrip)}
+                    className="bg-white mr-2 hover:bg-gray-300 px-4 py-2 rounded-md font-semibold w-full">
                     Ver inscripciones
                 </button>
                 <button className="bg-white hover:bg-gray-300 px-4 py-2 rounded-md font-semibold w-full">
@@ -156,16 +156,16 @@ const ProjectInfoLider = ({ _id }) => {
                 </form>
             </div>
             {
-                showInscrip&&(<Inscripciones _id={_id}/>)
+                showInscrip && (<Inscripciones _id={_id} />)
             }
         </div>
     )
 }
 
-const Inscripciones = ({_id}) => {
-    
-    const[listaInscripciones,setListaInscripciones] = useState();
-    const {data: queryData, loading, error} = useQuery(GET_INSCRIPCIONES,{
+const Inscripciones = ({ _id }) => {
+
+    const [listaInscripciones, setListaInscripciones] = useState();
+    const { data: queryData, loading, error } = useQuery(GET_INSCRIPCIONES, {
         variables: { _id }
     });
 
@@ -173,17 +173,17 @@ const Inscripciones = ({_id}) => {
         console.log(queryData);
     }, [queryData]);
 
-    if(loading) return <div>...Loading </div>;
+    if (loading) return <div>...Loading </div>;
 
-    if (queryData.Inscripciones){
+    if (queryData.inscripcionesEstudiante) {
 
-    //Aqui va el codigo que hace una busqueda de todas las inscripciones que tiene un proyecto
-    //El componente recibe el id del proyecto y se tiene que hacer un query a ese proyecto y traer todas las inscripciones
-    return ( 
-        <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 text-white">
-            
-        </div>
-    )
+        //Aqui va el codigo que hace una busqueda de todas las inscripciones que tiene un proyecto
+        //El componente recibe el id del proyecto y se tiene que hacer un query a ese proyecto y traer todas las inscripciones
+        return (
+            <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 text-white">
+
+            </div>
+        )
     }
 }
 
