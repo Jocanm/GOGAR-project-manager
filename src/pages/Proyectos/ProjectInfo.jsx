@@ -293,7 +293,9 @@ const Avances = ({ _id }) => {
 
 const AvanceItem = ({e,refetch}) => {
 
-
+    const [nueva, setNueva] = useState("")
+    const [open, setOpen] = useState(false)
+    const [observaciones, setObservaciones] = useState(false)
 
     const [agregarObs, { data, loading }] = useMutation(AGREGAR_OBSERVACIONES)
 
