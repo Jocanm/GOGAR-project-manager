@@ -56,12 +56,15 @@ export const GET_PROYECTO = gql`
         fase
         presupuesto
         inscripciones {
+            _id
             estado
-        estudiante {
-            nombre
-            apellido
+            estudiante {
+                nombre
+                apellido
+                identificacion
+                correo
             }
-        }     
+        }    
         avances {
             _id
             descripcion
@@ -70,3 +73,28 @@ export const GET_PROYECTO = gql`
     }
 }
 `;
+
+export const GET_AVANCES = gql`
+
+query Proyecto($_id: String!) {
+  Proyecto(_id: $_id) {
+  _id
+  nombre
+  estado
+  fase
+  avances {
+    _id
+    fecha
+    descripcion
+    observaciones
+    creadoPor {
+      nombre
+      apellido
+      correo
+      identificacion
+    }
+  }  
+  }
+}
+
+`

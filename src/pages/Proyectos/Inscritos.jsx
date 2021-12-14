@@ -10,15 +10,16 @@ const Inscritos = () => {
 
     const { userData } = useUser()
 
-    const { data, loading, error } = useQuery(GET_INSCRIPCIONES, {
+    const { data, loading, refetch } = useQuery(GET_INSCRIPCIONES, {
         variables: { _id: userData._id }
     })
 
     const [tipo, setTipo] = useState("PENDIENTE")
-    // const [dataFiltrada1] = useState(
-    //     data.inscripcionesEstudiante.filter(e=>e.fechaEgreso === undefined)
-    // )
     const [dataFiltrada2, setDataFiltrada2] = useState([])
+
+    useEffect(() => {
+        refetch()
+    },[refetch])
 
     useEffect(() => {
         if (data && data.inscripcionesEstudiante) {

@@ -8,6 +8,14 @@ export const CREAR_INSCRIPCION = gql`
             _id
             
         }
-}
+}`;
 
-`
+export const APROBAR_INSCRIPCION = gql`
+
+    mutation AprobarInscripcion($_id: String!) {
+        aprobarInscripcion(_id: $_id) {
+            estado
+            fechaIngreso  
+        }
+    }
+`;

@@ -25,7 +25,7 @@ const UserInfo = () => {
     const { form, formData, updateFormData } = useFormData(null);
     const { _id } = useParams()
 
-    const { data, loading, error } = useQuery(GET_USUARIO, {
+    const { data, loading, error, refetch } = useQuery(GET_USUARIO, {
         variables: { _id }
     })
 
@@ -35,6 +35,10 @@ const UserInfo = () => {
     const [usuario, setUsuario] = useState({})
 
     const [wrong, setWrong] = useState(false)
+
+    useEffect(() => {
+        refetch()
+    },[refetch])
 
     useEffect(() => {
         if (loading) console.log("Cargando");

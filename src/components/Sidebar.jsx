@@ -200,7 +200,7 @@ export const Header = () => {
     const {userData} = useUser()
 
     return (
-        <header className="bg-white w-full text-right sticky top-0 z-10 py-2 border-b-2 shadow-xl hidden md:block pr-8 font-bold "> 
+        <header className="bg-white w-full text-right sticky top-0 z-10 py-2 border-b-2 shadow-xl hidden md:block pr-8 font-bold animate__animated animate__fadeInRight animate__faster"> 
             <span className="border-b-2 border-custom-fourth">{userData.nombre} {userData.apellido} - {userData.rol}</span>
             <i 
             onClick={() =>navigate(`/usuarios/${userData._id}`)}

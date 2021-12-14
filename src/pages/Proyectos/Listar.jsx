@@ -10,13 +10,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { CREAR_INSCRIPCION } from '../../graphql/inscripciones/mutations';
-import { APROBAR_PROYECTO, INACTIVAR_PROYECTO } from '../../graphql/proyectos/mutations';
+import { APROBAR_PROYECTO, INACTIVAR_PROYECTO, TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
 import { nanoid } from 'nanoid';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { GET_INSCRIPCION } from '../../graphql/inscripciones/queries'
 import { useNavigate } from 'react-router'
-
-
 
 const Listar = () => {
 
@@ -58,12 +56,16 @@ const ProyectosLider = ({ userData }) => {
 
     const { _id } = userData
 
-    const { data, loading, error } = useQuery(PROYECTOS_LIDER, {
+    const { data, loading, refetch } = useQuery(PROYECTOS_LIDER, {
         variables: { _id }
     })
 
     const [filtro, setFiltro] = useState("ACTIVO")
     const [dataFiltrada, setDataFiltrada] = useState([])
+
+    useEffect(() => {
+        refetch()
+    },[refetch])
 
     useEffect(() => {
         if (data && data.Usuario.projectosLiderados) {
@@ -95,7 +97,7 @@ const ProyectosLider = ({ userData }) => {
                 </button>
                 <button
                     onClick={() => setFiltro("INACTIVO")}
-                    className={`px-4 py-2 mr-1 rounded w-full md:w-auto font-bold hover:bg-custom-five ${filtro === "INACTIVO" ? "bg-custom-five" : "bg-white"}`}>Sin aprobar
+                    className={`px-4 py-2 mr-1 rounded w-full md:w-auto font-bold hover:bg-custom-five ${filtro === "INACTIVO" ? "bg-custom-five" : "bg-white"}`}>Inactivos
                 </button>
                 <button
                     onClick={() => setFiltro("TERMINADO")}
@@ -111,9 +113,11 @@ const ProyectosLider = ({ userData }) => {
 
 const ProyectosEstudiante = () => {
 
-    const { data, loading, error } = useQuery(GET_PROYECTOS)
+    const { data, loading, refetch } = useQuery(GET_PROYECTOS)
 
     const [dataFiltrada, setDataFiltrada] = useState([])
+
+    useEffect(() => {refetch()},[refetch])
 
     useEffect(() => {
         if (data && data.Proyectos) {
@@ -140,14 +144,22 @@ const ProyectosEstudiante = () => {
 
 const ProyectosAdministrador = () => {
 
-    const { data, loading, error } = useQuery(GET_PROYECTOS)
+    const { data, loading, refetch } = useQuery(GET_PROYECTOS)
 
     const [tipo, setTipo] = useState("ACTIVO")
     const [dataFiltrada, setDataFiltrada] = useState([])
 
     useEffect(() => {
+        refetch()
+    },[refetch])
+
+    useEffect(() => {
         if (data && data.Proyectos) {
-            setDataFiltrada(data.Proyectos.filter(e => e.estado === tipo && e.fase !== "TERMINADO"))
+            if (tipo !== "TERMINADO") {
+                setDataFiltrada(data.Proyectos.filter(e => e.estado === tipo && e.fase !== "TERMINADO"))
+            } else {
+                setDataFiltrada(data.Proyectos.filter(e => e.fase === "TERMINADO"))
+            }
         }
     }, [tipo, data])
 
@@ -163,11 +175,15 @@ const ProyectosAdministrador = () => {
             <section className="mb-6 flex">
                 <button
                     onClick={() => setTipo("INACTIVO")}
-                    className={`px-4 py-2 mr-1 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "INACTIVO" ? "bg-custom-five" : "bg-white"}`}>Inactivos
+                    className={`px-4 py-2 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "INACTIVO" ? "bg-custom-five" : "bg-white"}`}>Inactivos
                 </button>
                 <button
                     onClick={() => setTipo("ACTIVO")}
-                    className={`px-4 py-2 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "ACTIVO" ? "bg-custom-five" : "bg-white"}`}>Activos
+                    className={`px-4 py-2 mx-1 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "ACTIVO" ? "bg-custom-five" : "bg-white"}`}>Activos
+                </button>
+                <button
+                    onClick={() => setTipo("TERMINADO")}
+                    className={`px-4 py-2 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "TERMINADO" ? "bg-custom-five" : "bg-white"}`}>Terminados
                 </button>
             </section>
             <ListaProyectos
@@ -210,12 +226,12 @@ const ProyectoItem = ({ proyecto }) => {
         <li
             className={`bg-white rounded-md p-5 relative pb-10 ${userData.rol === "ESTUDIANTE" || userData.rol === "LIDER" ? "pb-10" : "pb-5"} animate__animated animate__fadeIn animate__faster ${proyecto.fase === "TERMINADO" && "border-2 border-red-500"}`}
         >
-            <main className="flex justify-between mb-2 text-lg font-semibold">
-                <h2 className="capitalize">{proyecto.nombre}</h2>
+            <main className="mb-2 text-lg font-semibold">
                 <h2>
                     {proyecto.estado}
                     <i className={`fas fa-circle ml-2 ${proyecto.estado === "ACTIVO" ? "text-lime-600" : "text-red-700"}`}></i>
                 </h2>
+                <h2 className="capitalize">{proyecto.nombre}</h2>
             </main>
             <p className={`mb-2 ${userData.rol === "LIDER" && "hidden"}`}>
                 <span className="font-bold mr-2">Creado por:</span>
@@ -235,20 +251,13 @@ const ProyectoItem = ({ proyecto }) => {
                     ))
                 }
             </div>
-            {
-                proyecto.fechaFinal && (
-                    <div className={`border-t-2 pt-1`}>
-                        fecha Final:
-                    </div>
-                )
-            }
             <PrivateComponent roleList={["ESTUDIANTE"]}>
                 <GenerarInscripcion proyecto={proyecto} />
             </PrivateComponent>
             <PrivateComponent roleList={["LIDER", "ESTUDIANTE"]}>
                 <button
                     onClick={() => navigate(`/proyectos/${proyecto._id}`)}
-                    className={`bg-custom-five hover:bg-custom-fourth px-3 py-1 rounded-md text-custom-first font-semibold absolute bottom-4 left-4 ${proyecto.fase === "TERMINADO" && "hidden"}`}
+                    className={`bg-custom-five hover:bg-custom-fourth px-3 py-1 rounded-md text-custom-first font-semibold absolute bottom-4 left-4 ${proyecto.estado !== "ACTIVO" && "hidden"}`}
                 >Detalles
                 </button>
             </PrivateComponent>
@@ -258,9 +267,10 @@ const ProyectoItem = ({ proyecto }) => {
                         (<AprobarProyecto
                             proyecto={proyecto}
                         />) :
-                        (<InactivarProyecto
-                            proyecto={proyecto}
-                        />)
+                        (<div>
+                            <InactivarProyecto proyecto={proyecto} />
+                            <TerminarProyecto proyecto={proyecto} />
+                        </div>)
                 }
             </PrivateComponent>
         </li>
@@ -430,17 +440,12 @@ const AprobarProyecto = ({ proyecto }) => {
 const GenerarInscripcion = ({ proyecto }) => {
 
     const navigate = useNavigate()
-
     const { userData } = useUser();
-
     const [open, setOpen] = useState(false)
-
     const [inscribirse, { data, loading, error }] = useMutation(CREAR_INSCRIPCION)
-
     const { data: queryData, loading: queryLoading, error: queryError } = useQuery(GET_INSCRIPCION, {
         variables: { proyecto: proyecto._id, estudiante: userData._id }
     })
-
     const submit = () => {
         if (queryData && queryData.Inscripcion) {
             if (!queryData.Inscripcion.fechaEgreso) {
@@ -462,7 +467,6 @@ const GenerarInscripcion = ({ proyecto }) => {
             })
         }
     }
-
     useEffect(() => {
         if (data && data.crearInscripcion) {
             setOpen(false)
@@ -476,11 +480,8 @@ const GenerarInscripcion = ({ proyecto }) => {
                 }
             );
             navigate("/inscritos")
-            setTimeout(()=>{
-                window.location.reload()
-            },[500])
         }
-    }, [data, proyecto.nombre])
+    }, [data, proyecto.nombre,navigate])
 
     useEffect(() => {
         if (error) {
@@ -539,5 +540,79 @@ const GenerarInscripcion = ({ proyecto }) => {
         </>
     )
 }
+
+const TerminarProyecto = ({ proyecto }) => {
+
+    const [terminar, { data, loading, error }] = useMutation(TERMINAR_PROYECTO)
+
+    const [open, setOpen] = useState(false)
+
+    const submit = () => {
+        terminar({ variables: { _id: proyecto._id } })
+    }
+
+    useEffect(() => {
+        if (data && data.terminarProyecto) {
+            toast.success(`Proyecto "${proyecto.nombre} terminado correctamente""`,
+                {
+                    style: {
+                        borderRadius: '10px',
+                        background: '#333',
+                        color: '#fff',
+                    },
+                }
+            );
+            setOpen(false)
+        }
+    }, [data])
+
+
+    return (
+        <>
+            <button
+                onClick={() => setOpen(true)}
+                className="bg-custom-five hover:bg-custom-fourth px-4 py-1 rounded-md font-semibold absolute left-4 bottom-4">{`Terminar`}<i className="fas fa-exclamation-triangle ml-2"></i>
+            </button>
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                className="md:ml-24"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    <h3 className="border-b-2">{`Terminar el proyecto "${proyecto.nombre}"`}<i className="fas fa-exclamation-triangle"></i></h3>
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {`¿Está seguro que desea cambiar la fase del proyecto a terminado?`}
+                        <div>
+                            {"Una vez hecho el cambio el proyecto no podrá ser activado nuevamente."}
+                        </div>
+                        <div className={`flex justify-center ${loading || "hidden"}`}>
+                            <ReactLoading type="spin" height="10%" width="10%"
+                                color='#FF4C29'
+                            />
+                        </div>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    {
+                        loading || (
+                            <>
+                                <button
+                                    className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-md font-semibold"
+                                    onClick={() => setOpen(false)}>Cerrar</button>
+                                <button
+                                    onClick={submit}
+                                    className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-md font-semibold">Terminar</button>
+                            </>
+                        )
+                    }
+                </DialogActions>
+            </Dialog>
+        </>
+    )
+
+}
+
 
 export default Listar

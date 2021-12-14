@@ -60,15 +60,19 @@ const Crear = () => {
         console.log(data)
         if (data && mutationData) {
             if (data.crearProyecto && mutationData.crearObjetivo) {
+                toast.success(`Proyecto creado correctamente""`,
+                {
+                    style: {
+                        borderRadius: '10px',
+                        background: '#333',
+                        color: '#fff',
+                    },
+                }
+                );
                 navigate("/proyectos")
-                toast.success("Proyecto creado")
             }
         }
     }, [data, mutationData, navigate])
-
-    useEffect(() => {
-        console.log(especificos)
-    }, [especificos])
 
     return (
         <PrivateRoute roleList={["LIDER"]}>
