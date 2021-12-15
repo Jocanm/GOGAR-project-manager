@@ -21,3 +21,20 @@ export const EDITAR_AVANCE = gql`
     }
 
 `
+
+export const CREAR_AVANCE = gql`
+mutation CrearAvance($descripcion: String!, $proyecto: String!, $creadoPor: String!) {
+  crearAvance(descripcion: $descripcion, proyecto: $proyecto, creadoPor: $creadoPor) {
+  descripcion  
+  }
+}
+`
+
+export const EDITAR_DESCRIPCION = gql`
+mutation EditarAvance($id: String!, $descripcion: String) {
+  editarAvance(_id: $id, descripcion: $descripcion) {
+    _id
+    descripcion
+  }
+}
+`

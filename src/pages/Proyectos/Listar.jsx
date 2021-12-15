@@ -127,7 +127,7 @@ const ProyectosEstudiante = () => {
 
     if (loading) return (
         <div className="h-screen mx-auto flex items-center justify-center">
-            <ReactLoading type="spin" height="17%" width="17%" />
+            <ReactLoading type="spin" height="15%" width="15%" />
         </div>
     )
 
@@ -187,6 +187,7 @@ const ProyectosAdministrador = () => {
                 </button>
             </section>
             <ListaProyectos
+                refetchAdmin={refetch}
                 proyectos={dataFiltrada}
             />
         </div>
@@ -194,7 +195,7 @@ const ProyectosAdministrador = () => {
 
 }
 
-const ListaProyectos = ({ proyectos }) => {
+const ListaProyectos = ({ proyectos, refetchAdmin }) => {
 
     return (
         <ul
@@ -204,6 +205,7 @@ const ListaProyectos = ({ proyectos }) => {
                 proyectos.map(proyecto => (
                     <ProyectoItem
                         key={proyecto._id}
+                        refetchAdmin={refetchAdmin}
                         proyecto={proyecto}
                     />
                 ))
@@ -213,7 +215,7 @@ const ListaProyectos = ({ proyectos }) => {
 
 }
 
-const ProyectoItem = ({ proyecto }) => {
+const ProyectoItem = ({ proyecto, refetchAdmin }) => {
 
     const navigate = useNavigate()
 
@@ -254,7 +256,7 @@ const ProyectoItem = ({ proyecto }) => {
             <PrivateComponent roleList={["ESTUDIANTE"]}>
                 <GenerarInscripcion proyecto={proyecto} />
             </PrivateComponent>
-            <PrivateComponent roleList={["LIDER", "ESTUDIANTE"]}>
+            <PrivateComponent roleList={["LIDER"]}>
                 <button
                     onClick={() => navigate(`/proyectos/${proyecto._id}`)}
                     className={`bg-custom-five hover:bg-custom-fourth px-3 py-1 rounded-md text-custom-first font-semibold absolute bottom-4 left-4 ${proyecto.estado !== "ACTIVO" && "hidden"}`}
@@ -269,7 +271,7 @@ const ProyectoItem = ({ proyecto }) => {
                         />) :
                         (<div>
                             <InactivarProyecto proyecto={proyecto} />
-                            <TerminarProyecto proyecto={proyecto} />
+                            <TerminarProyecto refetchAdmin={refetchAdmin} proyecto={proyecto} />
                         </div>)
                 }
             </PrivateComponent>
@@ -541,7 +543,7 @@ const GenerarInscripcion = ({ proyecto }) => {
     )
 }
 
-const TerminarProyecto = ({ proyecto }) => {
+const TerminarProyecto = ({ proyecto, refetchAdmin }) => {
 
     const [terminar, { data, loading, error }] = useMutation(TERMINAR_PROYECTO)
 
@@ -563,6 +565,7 @@ const TerminarProyecto = ({ proyecto }) => {
                 }
             );
             setOpen(false)
+            refetchAdmin()
         }
     }, [data])
 

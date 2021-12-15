@@ -18,6 +18,7 @@ import Crear from './pages/Proyectos/Crear'
 import Listar from './pages/Proyectos/Listar'
 import Inscritos from './pages/Proyectos/Inscritos'
 import ProjectInfo from './pages/Proyectos/ProjectInfo'
+import { SidebarContext } from './context/SidebarContext'
 
 
 const httpLink = createHttpLink({
@@ -43,6 +44,7 @@ const App = () => {
 
     const [authToken, setAuthToken] = useState("")
     const [userData, setUserData] = useState({})
+    const [show,setShow] = useState(false)
 
     const setToken = (token) => {
         setAuthToken(token)
@@ -62,7 +64,8 @@ const App = () => {
     }, [authToken])
 
     return (
-        <>
+        <>  
+        <SidebarContext.Provider value={{show,setShow}}>
             <UserContext.Provider value={{ userData, setUserData }}>
                 <ApolloProvider client={client}>
                     <AuthContext.Provider value={{ setToken, authToken, setAuthToken }}>
@@ -87,6 +90,7 @@ const App = () => {
                     </AuthContext.Provider>
                 </ApolloProvider>
             </UserContext.Provider>
+        </SidebarContext.Provider>
         </>
     )
 }

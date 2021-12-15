@@ -11,7 +11,8 @@ import toast from 'react-hot-toast';
 import { ACTUALIZAR_PROYECTO, TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { APROBAR_INSCRIPCION } from '../../graphql/inscripciones/mutations';
-import { AGREGAR_OBSERVACIONES } from '../../graphql/avances/mutation';
+import { AGREGAR_OBSERVACIONES, CREAR_AVANCE, EDITAR_DESCRIPCION } from '../../graphql/avances/mutation';
+import { nanoid } from 'nanoid';
 
 
 const ProjectInfo = () => {
@@ -45,17 +46,74 @@ const ProjectInfo = () => {
 
 const ProjectInfoStudent = ({ _id }) => {
 
-    const { data, loading, error } = useQuery(GET_PROYECTO, {
+    const navigate = useNavigate()
+    const { userData } = useUser()
+    const [value, setValue] = useState("")
+    const [change, setChange] = useState(false)
+    const { data, loading } = useQuery(GET_PROYECTO, {
         variables: { _id }
     })
+    const [crearAvance, { data: mutationData, loading: mutationLoading }] = useMutation(CREAR_AVANCE)
+
+    const submit = () => {
+        if (value.length >= 4) {
+            crearAvance({
+                variables: {
+                    descripcion: value,
+                    proyecto: _id,
+                    creadoPor: userData._id
+                }
+            })
+        } else {
+            toast.error("La descripcion del avance debe tener 4 caracteres como minimo")
+        }
+    }
 
     useEffect(() => {
-        console.log("Data del proyecto:", data)
-    }, [data])
+        if (mutationData && mutationData.crearAvance) {
+            toast.success("Avance creado correctamente")
+            setValue("")
+            setChange(!change)
+        }
+    }, [mutationData])
+
+    if (loading) {
+        return (
+            <div className="h-screen mx-auto flex items-center justify-center">
+                <ReactLoading type="spin" height="17%" width="17%" />
+            </div>
+        )
+    }
 
     return (
-        <div className="text-white">
-            Esta es la pagina donde un estudiante prodria ver los avances a los proyectos que esta inscrito y el agregar avances tambien
+        <div className="text-white flex flex-col">
+            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 relative grid gap-3">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold uppercase" >{data.Proyecto.nombre}</h1>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Estado actual - {data.Proyecto.estado}</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Fase actual - {data.Proyecto.fase}</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Presupuesto - {data.Proyecto.presupuesto}$</div>
+                <i
+                    className="fas fa-undo absolute text-4xl top-10 right-8 text-custom-five cursor-pointer hover:text-custom-fourth"
+                    onClick={() => navigate(-1)}
+                ></i>
+            </div>
+            <div className="py-8 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 relative">
+                <h1 className="text-2xl text-center font-bold shadow">Avances</h1>
+                <label className="mt-2 block rounded-sm">
+                    <input
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                        className="outline-none px-1 py-1 text-gray-900 w-9/12 lg:w-3/4 rounded-tl rounded-bl"
+                        placeholder="Descripción"
+                        type="text" />
+                    <button
+                        onClick={submit}
+                        className="px-2 py-1 rounded-tr rounded-br bg-custom-five hover:bg-custom-fourth mt-2 lg:w-3/12">Agregar</button>
+                </label>
+                <Avances
+                    change={change}
+                    _id={_id} />
+            </div>
         </div>
     )
 
@@ -98,7 +156,7 @@ const ProjectInfoLider = ({ _id }) => {
     return (
         <div className="text-white flex flex-col">
             <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-sm shadow-xl md:px-16 lg:mx-20 relative">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold my-4" >{data.Proyecto.nombre}</h1>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold my-4 uppercase" >{data.Proyecto.nombre}</h1>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-4">Estado actual - {data.Proyecto.estado}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Fase actual - {data.Proyecto.fase}</div>
                 <i
@@ -258,13 +316,24 @@ const Inscripciones = ({ _id }) => {
     )
 }
 
-const Avances = ({ _id }) => {
+const Avances = ({ _id, change = false }) => {
 
+    const { userData } = useUser()
     const { data, loading, refetch } = useQuery(GET_AVANCES, {
         variables: { _id }
     })
+    const [busqueda, setBusqueda] = useState("")
+    const [dataFiltrada, setDataFiltrada] = useState([])
 
-    useEffect(() => { console.log(data) }, [data])
+    useEffect(() => {
+        refetch()
+    }, [change, refetch])
+
+    useEffect(() => {
+        if (data && data.Proyecto) {
+            setDataFiltrada(data.Proyecto.avances.filter(e => e.creadoPor.identificacion.startsWith(busqueda) || e.creadoPor.nombre.toLocaleLowerCase().startsWith(busqueda.toLocaleLowerCase())))
+        }
+    }, [busqueda, data])
 
     if (loading) {
         return (
@@ -276,14 +345,22 @@ const Avances = ({ _id }) => {
 
     return (
         <div>
-            <input
-                className="input text-gray-900"
-                type="text"
-                placeholder="Busca por estudiante (Identificación)" />
+            {
+                userData.rol === "LIDER" ?
+                    (
+                        <input
+                            value={busqueda}
+                            onChange={(e) => setBusqueda(e.target.value)}
+                            className={`input text-gray-900`}
+                            type="text"
+                            placeholder="Busca por estudiante (ID o nombre)" />
+                    ) :
+                    (<></>)
+            }
             <section className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
                 {
-                    data.Proyecto.avances.map(e => (
-                        <AvanceItem key={e._id} e={e} refetch={refetch}/>
+                    dataFiltrada.map(e => (
+                        <AvanceItem key={e._id} e={e} refetch={refetch} />
                     ))
                 }
             </section>
@@ -291,36 +368,73 @@ const Avances = ({ _id }) => {
     )
 }
 
-const AvanceItem = ({e,refetch}) => {
+const AvanceItem = ({ e, refetch }) => {
 
+    const { userData } = useUser()
     const [nueva, setNueva] = useState("")
     const [open, setOpen] = useState(false)
     const [observaciones, setObservaciones] = useState(false)
+    const [showInput, setShowInput] = useState(false)
+    const [value, setValue] = useState(e.descripcion)
 
     const [agregarObs, { data, loading }] = useMutation(AGREGAR_OBSERVACIONES)
+    const [editarDesc,{data: mutationData, loading: mutationLoading}] = useMutation(EDITAR_DESCRIPCION)
 
     const submit = () => {
-        agregarObs({ variables: { id:e._id, observaciones: [...e.observaciones, nueva] } })
+        agregarObs({ variables: { id: e._id, observaciones: [...e.observaciones, nueva] } })
     }
+
+    const submitDesc = () => {
+        editarDesc({variables: {
+            id:e._id,
+            descripcion:value
+        }})
+    }
+
+    useEffect(() => {
+        if(mutationData && mutationData.editarAvance){
+            toast.success("Avance editado correctamente")
+            refetch()
+            setShowInput(false)
+            setValue(e.descripcion)
+        }
+    },[mutationData])
 
     useEffect(() => {
         if (data && data.editarAvance) {
             toast.success("Observacion agregada correctamente!")
             setOpen(false)
             refetch()
-            // setTimeout(() => {
-            //     window.location.reload()
-            // }, [500])
         }
-    }, [data])
+    }, [data, refetch])
 
     return (
-        <main className="bg-white text-gray-900 p-2 rounded-sm overflow-y-auto">
+        <main className="bg-white text-gray-900 p-2 rounded-sm overflow-y-auto relative">
+            <i
+                onClick={() => setShowInput(!showInput)}
+                className={`fas fa-${showInput ? "times text-lg top-1" : "edit"} absolute right-2 ${userData._id !== e.creadoPor._id && "hidden"} cursor-pointer`}></i>
             <p className="capitalize">
                 {e.creadoPor.nombre} {e.creadoPor.apellido} - {e.creadoPor.identificacion}
             </p>
             <span className="font-bold block">Aporte: </span>
-            {e.descripcion}
+            {
+                showInput ?
+                    (
+                        <label className="">
+                            <input
+                            className="outline-none rounded-sm border-2"
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            type="text" />
+                            <button 
+                            onClick={submitDesc}
+                            className="bg-custom-five hover:bg-custom-fourth px-1 border-2 border-custom-fourth"><i className="fas fa-check"></i></button>
+                        </label>
+                    ) :
+                    (
+                        <div className={`${showInput && "hidden"}`}>{e.descripcion}</div>
+                    )
+            }
             <div className="border-b-2 mb-2">
                 <span className="font-bold">Fecha de creacion:</span> {e.fecha}
             </div>
@@ -335,17 +449,25 @@ const AvanceItem = ({e,refetch}) => {
             <div className={`mt-2 grid grid-cols-1 gap-3 ${observaciones || "hidden"}`}>
                 <div>
                     {e.observaciones.map(e => (
-                        <div>
+                        <div
+                            key={nanoid()}
+                        >
                             <i className="fa fa-check mr-2"></i>
                             <span>{e}</span>
                         </div>
                     ))}
                 </div>
-                <button
-                    onClick={() => setOpen(true)}
-                    className="bg-custom-five hover:bg-custom-fourth px-4 py-1 rounded-sm font-semibold w-full"
-                >Agregar
-                </button>
+                {
+                    userData.rol !== "LIDER" ?
+                        (<></>) :
+                        (
+                            <button
+                                onClick={() => setOpen(true)}
+                                className="bg-custom-five hover:bg-custom-fourth px-4 py-1 rounded-sm font-semibold w-full"
+                            >Agregar
+                            </button>
+                        )
+                }
             </div>
             <Dialog
                 open={open}

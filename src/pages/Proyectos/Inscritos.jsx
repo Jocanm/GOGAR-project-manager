@@ -1,10 +1,11 @@
 import { useQuery } from '@apollo/client'
 import { nanoid } from 'nanoid'
 import React, { useEffect, useState } from 'react'
-import PrivateComponent from '../../components/PrivateComponent'
 import { useUser } from '../../context/UserContext'
 import { GET_INSCRIPCIONES } from '../../graphql/inscripciones/queries'
 import ReactLoading from 'react-loading';
+import { useNavigate } from 'react-router-dom'
+import PrivateRoute from '../../components/PrivateRoute'
 
 const Inscritos = () => {
 
@@ -19,7 +20,7 @@ const Inscritos = () => {
 
     useEffect(() => {
         refetch()
-    },[refetch])
+    }, [refetch])
 
     useEffect(() => {
         if (data && data.inscripcionesEstudiante) {
@@ -36,22 +37,24 @@ const Inscritos = () => {
     }
 
     return (
-        <div>
-            <h1 className="bg-white mb-6 text-center py-3 rounded font-semibold text-xl mt-10 md:mt-0">Proyectos Inscritos</h1>
-            <section className="mb-6 flex">
-                <button
-                    onClick={() => setTipo("ACEPTADA")}
-                    className={`px-4 py-2 mr-1 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "ACEPTADA" ? "bg-custom-five" : "bg-white"}`}>Admitidos
-                </button>
-                <button
-                    onClick={() => setTipo("PENDIENTE")}
-                    className={`px-4 py-2 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "PENDIENTE" ? "bg-custom-five" : "bg-white"}`}>Sin aprobar
-                </button>
-            </section>
-            <ListaProyectos
-                inscripciones={dataFiltrada2}
-            />
-        </div>
+        <PrivateRoute roleList={["ESTUDIANTE"]}>
+            <div>
+                <h1 className="bg-white mb-6 text-center py-3 rounded font-semibold text-xl mt-10 md:mt-0">Proyectos Inscritos</h1>
+                <section className="mb-6 flex">
+                    <button
+                        onClick={() => setTipo("ACEPTADA")}
+                        className={`px-4 py-2 mr-1 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "ACEPTADA" ? "bg-custom-five" : "bg-white"}`}>Admitidos
+                    </button>
+                    <button
+                        onClick={() => setTipo("PENDIENTE")}
+                        className={`px-4 py-2 rounded w-full md:w-auto font-bold hover:bg-custom-five ${tipo === "PENDIENTE" ? "bg-custom-five" : "bg-white"}`}>Sin aprobar
+                    </button>
+                </section>
+                <ListaProyectos
+                    inscripciones={dataFiltrada2}
+                />
+            </div>
+        </PrivateRoute>
     )
 }
 
@@ -76,6 +79,8 @@ const ListaProyectos = ({ inscripciones }) => {
 
 const ProyectoItem = ({ inscripcion }) => {
 
+    const navigate = useNavigate()
+
     const { userData } = useUser();
 
     const [objetivoGeneral] = useState(inscripcion.proyecto.objetivos.find(e => e.tipo === "GENERAL"))
@@ -85,12 +90,13 @@ const ProyectoItem = ({ inscripcion }) => {
         <li
             className={`bg-white rounded-md p-5 relative pb-10 animate__animated animate__fadeIn animate__faster`}
         >
-            <main className="flex justify-between mb-2 text-lg font-semibold">
-                <h2 className="capitalize">{inscripcion.proyecto.nombre}</h2>
+            <main className="flex flex-col justify-between mb-2 text-lg font-semibold">
                 <h2>
-                    {inscripcion.proyecto.estado}
+                    <span className={`${inscripcion.proyecto.fase === "TERMINADO" && "hidden"}`}>{inscripcion.proyecto.estado}</span>
+                    <span className={`${inscripcion.proyecto.fase !== "TERMINADO" && "hidden"}`}>{inscripcion.proyecto.fase}</span>
                     <i className={`fas fa-circle ml-2 ${inscripcion.proyecto.estado === "ACTIVO" ? "text-lime-600" : "text-red-700"}`}></i>
                 </h2>
+                <h2 className="capitalize">{inscripcion.proyecto.nombre}</h2>
             </main>
             <p className={`mb-2 ${userData.rol === "LIDER" && "hidden"}`}>
                 <span className="font-bold mr-2">Creado por:</span>
@@ -111,7 +117,8 @@ const ProyectoItem = ({ inscripcion }) => {
                 }
             </div>
             <button
-                className={`bg-custom-five hover:bg-custom-fourth px-3 py-1 rounded-md text-custom-first font-semibold absolute bottom-4 right-4 ${inscripcion.estado !== "ACEPTADA" && "hidden"}`}
+                onClick={() => { navigate(`/proyectos/${inscripcion.proyecto._id}`) }}
+                className={`bg-custom-five hover:bg-custom-fourth px-3 py-1 rounded-md text-custom-first font-semibold absolute bottom-4 right-4 ${inscripcion.estado !== "ACEPTADA" && "hidden"} ${inscripcion.proyecto.estado === "INACTIVO" && "hidden"}`}
             >Agregar avances
             </button>
         </li>

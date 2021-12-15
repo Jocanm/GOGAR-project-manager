@@ -88,6 +88,7 @@ query Proyecto($_id: String!) {
     descripcion
     observaciones
     creadoPor {
+      _id
       nombre
       apellido
       correo
