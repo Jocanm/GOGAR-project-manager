@@ -453,9 +453,14 @@ const GenerarInscripcion = ({ proyecto }) => {
     const { userData } = useUser();
     const [open, setOpen] = useState(false)
     const [inscribirse, { data, loading, error }] = useMutation(CREAR_INSCRIPCION)
-    const { data: queryData, loading: queryLoading, error: queryError } = useQuery(GET_INSCRIPCION, {
+    const { data: queryData, loading: queryLoading, error: queryError, refetch } = useQuery(GET_INSCRIPCION, {
         variables: { proyecto: proyecto._id, estudiante: userData._id }
     })
+
+    useEffect(() => {
+        refetch()
+    },[refetch])
+
     const submit = () => {
         if (queryData && queryData.Inscripcion) {
             if (!queryData.Inscripcion.fechaEgreso) {
