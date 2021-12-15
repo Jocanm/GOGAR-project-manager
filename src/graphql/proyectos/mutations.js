@@ -55,3 +55,12 @@ export const TERMINAR_PROYECTO = gql`
     }
 
 `
+
+export const ACTUALIZAR_PROYECTO = gql`
+    mutation ActualizarProyecto($_id: String!, $nombre: String!, $presupuesto: Float!) {
+        actualizarProyecto(_id: $_id, nombre: $nombre, presupuesto: $presupuesto) {
+            _id
+            nombre
+        }
+    }
+`

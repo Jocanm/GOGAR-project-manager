@@ -15,6 +15,7 @@ import { nanoid } from 'nanoid';
 import toast from 'react-hot-toast';
 import { GET_INSCRIPCION } from '../../graphql/inscripciones/queries'
 import { useNavigate } from 'react-router'
+import PrivateRoute from '../../components/PrivateRoute';
 
 const Listar = () => {
 
@@ -23,7 +24,9 @@ const Listar = () => {
     if (userData.rol === "LIDER") {
         return (
             <>
-                <ProyectosLider userData={userData} />
+                <PrivateRoute roleList={["LIDER"]}>
+                    <ProyectosLider userData={userData} />
+                </PrivateRoute>
             </>
         )
     }
@@ -31,7 +34,9 @@ const Listar = () => {
     if (userData.rol === "ESTUDIANTE") {
         return (
             <>
-                <ProyectosEstudiante />
+                <PrivateRoute roleList={["ESTUDIANTE"]}>
+                    <ProyectosEstudiante />
+                </PrivateRoute>
             </>
         )
     }
@@ -39,7 +44,9 @@ const Listar = () => {
     if (userData.rol === "ADMINISTRADOR") {
         return (
             <>
-                <ProyectosAdministrador />
+                <PrivateRoute roleList={["ADMINISTRADOR"]}>
+                    <ProyectosAdministrador />
+                </PrivateRoute>
             </>
         )
     }
@@ -65,7 +72,7 @@ const ProyectosLider = ({ userData }) => {
 
     useEffect(() => {
         refetch()
-    },[refetch])
+    }, [refetch])
 
     useEffect(() => {
         if (data && data.Usuario.projectosLiderados) {
@@ -117,7 +124,7 @@ const ProyectosEstudiante = () => {
 
     const [dataFiltrada, setDataFiltrada] = useState([])
 
-    useEffect(() => {refetch()},[refetch])
+    useEffect(() => { refetch() }, [refetch])
 
     useEffect(() => {
         if (data && data.Proyectos) {
@@ -151,7 +158,7 @@ const ProyectosAdministrador = () => {
 
     useEffect(() => {
         refetch()
-    },[refetch])
+    }, [refetch])
 
     useEffect(() => {
         if (data && data.Proyectos) {
@@ -230,7 +237,8 @@ const ProyectoItem = ({ proyecto, refetchAdmin }) => {
         >
             <main className="mb-2 text-lg font-semibold">
                 <h2>
-                    {proyecto.estado}
+                    <span className={`${proyecto.fase === "TERMINADO" && "hidden"}`}>{proyecto.estado}</span>
+                    <span className={`${proyecto.fase !== "TERMINADO" && "hidden"}`}>{proyecto.fase}</span>
                     <i className={`fas fa-circle ml-2 ${proyecto.estado === "ACTIVO" ? "text-lime-600" : "text-red-700"}`}></i>
                 </h2>
                 <h2 className="capitalize">{proyecto.nombre}</h2>
@@ -393,7 +401,7 @@ const AprobarProyecto = ({ proyecto }) => {
         <div>
             <button
                 onClick={() => setOpen(true)}
-                className={`bg-custom-five hover:bg-custom-fourth px-3 py-1 rounded-md text-custom-first font-semibold absolute bottom-4 right-4`}
+                className={`bg-custom-five hover:bg-custom-fourth px-3 py-1 rounded-md text-custom-first font-semibold absolute bottom-4 right-4 ${proyecto.fase === "TERMINADO" && "hidden"}`}
             >Activar proyecto</button>
             <Dialog
                 open={open}
@@ -483,9 +491,9 @@ const GenerarInscripcion = ({ proyecto }) => {
             );
             navigate("/inscritos")
         }
-    }, [data, proyecto.nombre,navigate])
+    }, [data, proyecto.nombre, navigate])
 
-    
+
 
 
     return (

@@ -60,7 +60,7 @@ const Crear = () => {
         console.log(data)
         if (data && mutationData) {
             if (data.crearProyecto && mutationData.crearObjetivo) {
-                toast.success(`Proyecto creado correctamente""`,
+                toast.success(`Proyecto creado correctamente!`,
                 {
                     style: {
                         borderRadius: '10px',

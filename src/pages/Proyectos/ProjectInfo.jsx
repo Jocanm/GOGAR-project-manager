@@ -3,17 +3,12 @@ import ReactLoading from 'react-loading';
 import { useParams, useNavigate } from 'react-router'
 import { useUser } from '../../context/UserContext'
 import { useMutation, useQuery } from '@apollo/client'
-<<<<<<< HEAD
 import { GET_AVANCES, GET_PROYECTO } from '../../graphql/proyectos/queries';
-=======
-import { GET_PROYECTO } from '../../graphql/proyectos/queries';
-import { GET_INSCRIPCIONES} from '../../graphql/inscripciones/queries';
->>>>>>> daniel_incripciones
 import useFormData from '../../hooks/useFormData';
 import Input from '../../components/Input';
 import ButtonLoading from '../../components/ButtonLoading';
 import toast from 'react-hot-toast';
-import { TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
+import { ACTUALIZAR_PROYECTO, TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { APROBAR_INSCRIPCION } from '../../graphql/inscripciones/mutations';
 import { AGREGAR_OBSERVACIONES, CREAR_AVANCE, EDITAR_DESCRIPCION } from '../../graphql/avances/mutation';
@@ -133,14 +128,20 @@ const ProjectInfoLider = ({ _id }) => {
     })
 
     const [show, setShow] = useState(false)
-    const [showInscrip,setShowInscrip] = useState(false)
-
+    const [actualizar, { data: mutationData, loading: mutationLoading, error: mutationError }] = useMutation(ACTUALIZAR_PROYECTO)
     const { form, formData, updateFormData } = useFormData(null)
 
     const submitForm = (e) => {
         e.preventDefault()
-        toast.success("Editado")
+        actualizar({ variables: { _id, ...formData, presupuesto: Number(formData.presupuesto) } })
     }
+
+    useEffect(() => {
+        if (mutationData && mutationData.actualizarProyecto) {
+            toast.success("Proyecto actualizado correctamente!")
+            setShow(false)
+        }
+    }, [mutationData])
 
     if (loading) {
         return (
@@ -151,22 +152,15 @@ const ProjectInfoLider = ({ _id }) => {
     }
 
     return (
-<<<<<<< HEAD
         <div className="text-white flex flex-col">
             <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-sm shadow-xl md:px-16 lg:mx-20 relative">
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold my-4 uppercase" >{data.Proyecto.nombre}</h1>
-=======
-        <div className="pb-7 text-white flex flex-col">
-            <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 relative">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold my-4" >{data.Proyecto.nombre}</h1>
->>>>>>> daniel_incripciones
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-4">Estado actual - {data.Proyecto.estado}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Fase actual - {data.Proyecto.fase}</div>
                 <i
                     className="fas fa-undo absolute text-4xl top-10 right-8 text-custom-five cursor-pointer hover:text-custom-fourth"
                     onClick={() => navigate(-1)}
                 ></i>
-<<<<<<< HEAD
                 <div className="flex justify-between">
                     <button
                         onClick={() => setShow(!show)}
@@ -178,29 +172,6 @@ const ProjectInfoLider = ({ _id }) => {
                         <TerminarProyecto proyecto={data.Proyecto} />
                     </div>
                 </div>
-=======
-                <div className="flex">
-                    <button
-                        onClick={() => setShow(!show)}
-                        className="bg-white hover:bg-gray-300 text-gray-900 px-4 py-2 rounded-md font-semibold relative top-4 mr-2 w-full"
-                    >
-                        Actualizar datos
-                    </button>
-                    <div className={`inline ${data.Proyecto.fase === "TERMINADO" && "hidden"} w-full`}>
-                        <TerminarProyecto proyecto={data.Proyecto} />
-                    </div>
-                </div>
-            </div>
-            <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 flex text-gray-900">
-                <button 
-                onClick={()=>setShowInscrip(!showInscrip)}
-                className="bg-white mr-2 hover:bg-gray-300 px-4 py-2 rounded-md font-semibold w-full">
-                    Ver inscripciones
-                </button>
-                <button className="bg-white hover:bg-gray-300 px-4 py-2 rounded-md font-semibold w-full">
-                    Ver Avances
-                </button>
->>>>>>> daniel_incripciones
             </div>
             <div className={`py-12 px-7 bg-custom-third mt-8 mx-4 rounded-sm shadow-xl md:px-20 lg:mx-20 ${show || "hidden"}`}>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl text-white font-semibold my-4">Nuevos datos:</h2>
@@ -239,18 +210,11 @@ const ProjectInfoLider = ({ _id }) => {
                     } */}
                 </form>
             </div>
-<<<<<<< HEAD
             <MainInfo _id={_id} />
-=======
-            {
-                showInscrip&&(<Inscripciones _id={_id}/>)
-            }
->>>>>>> daniel_incripciones
         </div>
     )
 }
 
-<<<<<<< HEAD
 const MainInfo = ({ _id }) => {
 
     const [showAvances, setShowAvances] = useState(true)
@@ -270,25 +234,6 @@ const MainInfo = ({ _id }) => {
                     (<Avances _id={_id} />) :
                     (<Inscripciones _id={_id} />)
             }
-=======
-const Inscripciones = ({_id}) => {
-
-    //Aqui va el codigo que hace una busqueda de todas las inscripciones que tiene un proyecto
-    //El componente recibe el id del proyecto y se tiene que hacer un query a ese proyecto y traer todas las inscripciones
-
-
-    const { data} = useQuery(GET_INSCRIPCIONES, {
-        variables: { _id }
-    })
-
-    useEffect(() => {
-        console.log("Incripciones del proyecto:", data)
-    }, [data])
-
-    return (
-        <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 text-white">
-            lista de inscripciones
->>>>>>> daniel_incripciones
         </div>
     )
 }
@@ -579,11 +524,7 @@ const TerminarProyecto = ({ proyecto }) => {
         <>
             <button
                 onClick={() => setOpen(true)}
-<<<<<<< HEAD
                 className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-sm font-semibold relative top-4 w-full">{`Terminar proyecto`}<i className="fas fa-exclamation-triangle ml-2"></i>
-=======
-                className="bg-white hover:bg-gray-300 text-gray-900 px-4 py-2 rounded-md font-semibold relative top-4 w-full">{`Terminar proyecto`}<i className="fas fa-exclamation-triangle ml-2"></i>
->>>>>>> daniel_incripciones
             </button>
             <Dialog
                 open={open}
