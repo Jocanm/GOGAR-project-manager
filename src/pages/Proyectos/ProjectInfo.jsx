@@ -10,10 +10,15 @@ import ButtonLoading from '../../components/ButtonLoading';
 import toast from 'react-hot-toast';
 import { ACTUALIZAR_PROYECTO, TERMINAR_PROYECTO } from '../../graphql/proyectos/mutations';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+<<<<<<< HEAD
 import { APROBAR_INSCRIPCION } from '../../graphql/inscripciones/mutations';
 import { AGREGAR_OBSERVACIONES, CREAR_AVANCE, EDITAR_DESCRIPCION } from '../../graphql/avances/mutation';
 import { nanoid } from 'nanoid';
 
+=======
+import { GET_INSCRIPCIONES } from '../../graphql/inscripciones/queries.js';
+import DropDown from '../../components/DropDown';
+>>>>>>> base2
 
 const ProjectInfo = () => {
 
