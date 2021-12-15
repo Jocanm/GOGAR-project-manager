@@ -164,27 +164,46 @@ const ProjectInfoLider = ({ _id }) => {
 
 const Inscripciones = ({_id}) => {
     
-    const[listaInscripciones,setListaInscripciones] = useState();
+    
     const {data: queryData, loading, error} = useQuery(GET_INSCRIPCIONES,{
+        
         variables: { _id }
     });
+    const[listaInscripciones,setListaInscripciones] = useState();
+
 
     useEffect(() => {
-        console.log(queryData);
+        setListaInscripciones(queryData.Inscripciones)
     }, [queryData]);
 
-    if(loading) return <div>...Loading </div>;
+    useEffect(() => {
+        console.log(queryData)  
+    }, [queryData]);
 
-    if (queryData.Inscripciones){
+    if(loading) 
 
     //Aqui va el codigo que hace una busqueda de todas las inscripciones que tiene un proyecto
     //El componente recibe el id del proyecto y se tiene que hacer un query a ese proyecto y traer todas las inscripciones
     return ( 
         <div className="px-10 py-5 bg-custom-third mt-6 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 text-white">
-            
+            <ReactLoading type="spin" height="20%" width="20%" />
         </div>
     )
-    }
+}
+
+const MainInfo = ({ _id }) => {
+
+    const[listaInscripciones,setListaInscripciones] = useState();
+
+    return (
+        <div className="py-5 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-sm shadow-xl md:px-16 lg:mx-20 relative">
+            <section className="flex justify-between mb-4">
+                <button
+                    onClick={() => setListaInscripciones(false)}
+                    className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-sm font-semibold mr-2 w-full"> Inscripciones </button>
+            </section>
+        </div>
+    )
 }
 
 const TerminarProyecto = ({ proyecto }) => {
