@@ -22,7 +22,7 @@ import { SidebarContext } from './context/SidebarContext'
 
 
 const httpLink = createHttpLink({
-    uri: 'http://localhost:4000/graphql',
+    uri: 'https://back-gogar-c4.herokuapp.com/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
