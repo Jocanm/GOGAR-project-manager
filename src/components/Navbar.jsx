@@ -13,13 +13,13 @@ const Navbar = () => {
                 </Link>
                 <li className="hidden md:block relative top-1">
                     <Link to="/auth/login">
-                        <span className="cursor-pointer mr-5 hover:text-custom-fourth">Login</span>
+                        <span className="cursor-pointer mr-5 hover:text-custom-fourth">Ingresar</span>
                     </Link>
                     <Link to="/auth/registro">
                         <span
                             className="cursor-pointer bg-custom-fourth px-4 py-2 rounded-lg hover:shadow-lg hover:text-white"
                         >
-                            Try it for free
+                            Registrate
                         </span>
                     </Link>
                 </li>
@@ -41,13 +41,13 @@ const Navbar = () => {
                 show && (
                     <li className="flex flex-col items-start mt-4 md:hidden animate__animated animate__fadeInDown animate__faster">
                         <Link to="/auth/login">
-                            <span className="hover:text-custom-fourth text-sm mb-4">Login</span>
+                            <span className="hover:text-custom-fourth text-sm mb-4">Ingresar</span>
                         </Link>
                         <Link to="/auth/registro">
                             <span
                                 className="bg-custom-fourth rounded-lg hover:shadow-lg hover:text-white text-sm px-4 py-2"
                             >
-                                Try it for free
+                                Registrate
                             </span>
                         </Link>
                     </li>
