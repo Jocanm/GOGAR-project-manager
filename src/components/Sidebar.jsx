@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { useAuthContext } from '../context/AuthContext'
-import PrivateComponent from './PrivateComponent'
-import { useUser } from '../context/UserContext'
-import { useNavigate } from 'react-router'
-import { useSidebarContext } from '../context/SidebarContext'
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
+import PrivateComponent from "./PrivateComponent";
+import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router";
+import { useSidebarContext } from "../context/SidebarContext";
 
 // const SidebarMobile = () => {
 
@@ -86,196 +86,194 @@ import { useSidebarContext } from '../context/SidebarContext'
 // }
 
 const SidebarListItem = ({ to, title, icon, extra = "" }) => {
-    return (
-        <NavLink
-            to={to}
-            className={
-                ({ isActive }) => (
-                    isActive
-                        ? ` bg-custom-fourth py-2 px-5 rounded-lg mb-4 text-lg ${extra}`
-                        : `py-2 px-5 mb-4 text-lg item-sidebar hover:text-custom-fourth ${extra}`
-                )
-            }
-        >
-            <div
-                className="flex items-center">
-                <i className={icon}></i>
-                <span className="ml-2">{title}</span>
-            </div>
-        </NavLink>
-    )
-}
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        isActive
+          ? ` bg-custom-fourth py-2 px-5 rounded-lg mb-4 text-lg ${extra}`
+          : `py-2 px-5 mb-4 text-lg item-sidebar hover:text-custom-fourth ${extra}`
+      }
+    >
+      <div className="flex items-center">
+        <i className={icon}></i>
+        <span className="ml-2">{title}</span>
+      </div>
+    </NavLink>
+  );
+};
 
 const Logout = () => {
+  const { setToken } = useAuthContext();
 
-    const { setToken } = useAuthContext()
-
-    return (
-        <NavLink
-            to="/auth/login"
-            className={
-                ({ isActive }) => (
-                    isActive
-                        ? "bg-custom-fourth py-2 px-5 rounded-lg mb-4 md:text-lg "
-                        : "py-2 px-5 mb-4 text-lg item-sidebar hover:text-custom-fourth"
-                )
-            }
-        >
-            <div
-                onClick={() => setToken(null)}
-                className="flex items-center">
-                <i className="fas fa-sign-out-alt"></i>
-                <span className="ml-2">{"Logout"}</span>
-            </div>
-        </NavLink>
-    )
-}
+  return (
+    <NavLink
+      to="/auth/login"
+      className={({ isActive }) =>
+        isActive
+          ? "bg-custom-fourth py-2 px-5 rounded-lg mb-4 md:text-lg "
+          : "py-2 px-5 mb-4 text-lg item-sidebar hover:text-custom-fourth"
+      }
+    >
+      <div onClick={() => setToken(null)} className="flex items-center">
+        <i className="fas fa-sign-out-alt"></i>
+        <span className="ml-2">{"Salir"}</span>
+      </div>
+    </NavLink>
+  );
+};
 
 const SidebarMobile = () => {
+  const { show } = useSidebarContext();
+  const [open, setOpen] = useState(false);
 
-    const {show} = useSidebarContext()
-    const [open, setOpen] = useState(false)
-
-    return (
-        <>
-            <div className={`bg-white h-full w-44 lg:w-48 overflow-visible px-2 lg:px-4 pt-10 animate__animated animate__faster border-r-2 md:hidden fixed z-40 ${show?"animate__fadeInLeft":"animate__fadeOutLeft"}`}>
-                <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8 text-center">GOGAR</h1>
-                <ul className="flex flex-col justify-center">
-                    <SidebarListItem
-                        to="/home"
-                        title="Home"
-                        icon="fas fa-home"
-                    />
-                    <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
-                        <SidebarListItem
-                            to="/usuarios"
-                            title="Users"
-                            icon="fas fa-user"
-                        />
-                    </PrivateComponent>
-                    <li
-                        className="py-2 px-5 mb-4 text-lg item-sidebar cursor-pointer"
-                    >
-                        <div
-                            onClick={() => setOpen(!open)}
-                            className="flex items-center hover:text-custom-fourth">
-                            <i className={"fas fa-tasks"}></i>
-                            <span className="mx-2">{"Proyectos"}</span>
-                            <i className={`fas fa-chevron-${open ? "up" : "down"} text-sm relative top-px`}></i>
-                        </div>
-                    </li>
-                    <PrivateComponent roleList={["LIDER"]}>
-                        <SidebarListItem
-                            to="/crear"
-                            icon="fas fa-plus"
-                            title="Crear"
-                            extra={`ml-6 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
-                        />
-                    </PrivateComponent>
-                    <SidebarListItem
-                        to="/proyectos"
-                        icon="fas fa-book-reader"
-                        title="Listar"
-                        extra={`ml-6 -mt-4 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
-                    />
-                    <PrivateComponent roleList={"ESTUDIANTE"}>
-                        <SidebarListItem
-                            to="/inscritos"
-                            icon="fas fa-folder-open"
-                            title="Inscritos"
-                            extra={`ml-6 -mt-4 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
-                        />
-                    </PrivateComponent>
-                    <Logout />
-                </ul>
+  return (
+    <>
+      <div
+        className={`bg-white h-full w-44 lg:w-48 overflow-visible px-2 lg:px-4 pt-10 animate__animated animate__faster border-r-2 md:hidden fixed z-40 ${
+          show ? "animate__fadeInLeft" : "animate__fadeOutLeft"
+        }`}
+      >
+        <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8 text-center">
+          GOGAR
+        </h1>
+        <ul className="flex flex-col justify-center">
+          <SidebarListItem to="/home" title="Inicio" icon="fas fa-home" />
+          <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
+            <SidebarListItem to="/usuarios" title="Users" icon="fas fa-user" />
+          </PrivateComponent>
+          <li className="py-2 px-5 mb-4 text-lg item-sidebar cursor-pointer">
+            <div
+              onClick={() => setOpen(!open)}
+              className="flex items-center hover:text-custom-fourth"
+            >
+              <i className={"fas fa-tasks"}></i>
+              <span className="mx-2">{"Proyectos"}</span>
+              <i
+                className={`fas fa-chevron-${
+                  open ? "up" : "down"
+                } text-sm relative top-px`}
+              ></i>
             </div>
-
-        </>
-    )
-}
+          </li>
+          <PrivateComponent roleList={["LIDER"]}>
+            <SidebarListItem
+              to="/crear"
+              icon="fas fa-plus"
+              title="Crear"
+              extra={`ml-6 animate__animated animate__faster ${
+                open ? "block animate__fadeInLeft" : "hidden"
+              }`}
+            />
+          </PrivateComponent>
+          <SidebarListItem
+            to="/proyectos"
+            icon="fas fa-book-reader"
+            title="Listar"
+            extra={`ml-6 -mt-4 animate__animated animate__faster ${
+              open ? "block animate__fadeInLeft" : "hidden"
+            }`}
+          />
+          <PrivateComponent roleList={"ESTUDIANTE"}>
+            <SidebarListItem
+              to="/inscritos"
+              icon="fas fa-folder-open"
+              title="Inscritos"
+              extra={`ml-6 -mt-4 animate__animated animate__faster ${
+                open ? "block animate__fadeInLeft" : "hidden"
+              }`}
+            />
+          </PrivateComponent>
+          <Logout />
+        </ul>
+      </div>
+    </>
+  );
+};
 
 export const SidebarDesktop = () => {
+  const [open, setOpen] = useState(false);
 
-    const [open, setOpen] = useState(false)
-
-    return (
-        <>
-            <div className={`bg-white h-full w-44 lg:w-48 overflow-visible px-2 lg:px-4 pt-10 animate__animated animate__fadeInLeft animate__faster border-r-2 hidden md:block`}>
-                <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8 text-center">GOGAR</h1>
-                <ul className="flex flex-col justify-center">
-                    <SidebarListItem
-                        to="/home"
-                        title="Home"
-                        icon="fas fa-home"
-                    />
-                    <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
-                        <SidebarListItem
-                            to="/usuarios"
-                            title="Users"
-                            icon="fas fa-user"
-                        />
-                    </PrivateComponent>
-                    <li
-                        className="py-2 px-5 mb-4 text-lg item-sidebar cursor-pointer"
-                    >
-                        <div
-                            onClick={() => setOpen(!open)}
-                            className="flex items-center hover:text-custom-fourth">
-                            <i className={"fas fa-tasks"}></i>
-                            <span className="mx-2">{"Proyectos"}</span>
-                            <i className={`fas fa-chevron-${open ? "up" : "down"} text-sm relative top-px`}></i>
-                        </div>
-                    </li>
-                    <PrivateComponent roleList={["LIDER"]}>
-                        <SidebarListItem
-                            to="/crear"
-                            icon="fas fa-plus"
-                            title="Crear"
-                            extra={`ml-6 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
-                        />
-                    </PrivateComponent>
-                    <SidebarListItem
-                        to="/proyectos"
-                        icon="fas fa-book-reader"
-                        title="Listar"
-                        extra={`ml-6 -mt-4 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
-                    />
-                    <PrivateComponent roleList={"ESTUDIANTE"}>
-                        <SidebarListItem
-                            to="/inscritos"
-                            icon="fas fa-folder-open"
-                            title="Inscritos"
-                            extra={`ml-6 -mt-4 animate__animated animate__faster ${open ? "block animate__fadeInLeft" : "hidden"}`}
-                        />
-                    </PrivateComponent>
-                    <Logout />
-                </ul>
+  return (
+    <>
+      <div
+        className={`bg-white h-full w-44 lg:w-48 overflow-visible px-2 lg:px-4 pt-10 animate__animated animate__fadeInLeft animate__faster border-r-2 hidden md:block`}
+      >
+        <h1 className="text-3xl tracking-widest text-custom-fourth font-semibold mb-8 text-center">
+          GOGAR
+        </h1>
+        <ul className="flex flex-col justify-center">
+          <SidebarListItem to="/home" title="Inicio" icon="fas fa-home" />
+          <PrivateComponent roleList={["ADMINISTRADOR", "LIDER"]}>
+            <SidebarListItem to="/usuarios" title="Users" icon="fas fa-user" />
+          </PrivateComponent>
+          <li className="py-2 px-5 mb-4 text-lg item-sidebar cursor-pointer">
+            <div
+              onClick={() => setOpen(!open)}
+              className="flex items-center hover:text-custom-fourth"
+            >
+              <i className={"fas fa-tasks"}></i>
+              <span className="mx-2">{"Proyectos"}</span>
+              <i
+                className={`fas fa-chevron-${
+                  open ? "up" : "down"
+                } text-sm relative top-px`}
+              ></i>
             </div>
-
-        </>
-    )
-
-}
+          </li>
+          <PrivateComponent roleList={["LIDER"]}>
+            <SidebarListItem
+              to="/crear"
+              icon="fas fa-plus"
+              title="Crear"
+              extra={`ml-6 animate__animated animate__faster ${
+                open ? "block animate__fadeInLeft" : "hidden"
+              }`}
+            />
+          </PrivateComponent>
+          <SidebarListItem
+            to="/proyectos"
+            icon="fas fa-book-reader"
+            title="Listar"
+            extra={`ml-6 -mt-4 animate__animated animate__faster ${
+              open ? "block animate__fadeInLeft" : "hidden"
+            }`}
+          />
+          <PrivateComponent roleList={"ESTUDIANTE"}>
+            <SidebarListItem
+              to="/inscritos"
+              icon="fas fa-folder-open"
+              title="Inscritos"
+              extra={`ml-6 -mt-4 animate__animated animate__faster ${
+                open ? "block animate__fadeInLeft" : "hidden"
+              }`}
+            />
+          </PrivateComponent>
+          <Logout />
+        </ul>
+      </div>
+    </>
+  );
+};
 
 export const Header = () => {
+  // const { show, setShow } = useSidebarContext()
 
-    // const { show, setShow } = useSidebarContext()
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
+  const { userData } = useUser();
 
-    const { userData } = useUser()
+  return (
+    <header className="bg-white w-full text-right sticky top-0 z-10 py-2 border-b-2 shadow-xl pr-8 font-bold animate__animated animate__fadeInRight animate__faster">
+      <span className="text-xs sm:text-base border-b-2 border-custom-fourth">
+        {userData.nombre} {userData.apellido} - {userData.rol}
+      </span>
+      <i
+        onClick={() => navigate(`/usuarios/${userData._id}`)}
+        className="fa fa-user ml-3 bg-custom-fourth p-2 rounded-full cursor-pointer text-white"
+      ></i>
+    </header>
+  );
+};
 
-    return (
-        <header className="bg-white w-full text-right sticky top-0 z-10 py-2 border-b-2 shadow-xl pr-8 font-bold animate__animated animate__fadeInRight animate__faster">
-
-            <span className="text-xs sm:text-base border-b-2 border-custom-fourth">{userData.nombre} {userData.apellido} - {userData.rol}</span>
-            <i
-                onClick={() => navigate(`/usuarios/${userData._id}`)}
-                className="fa fa-user ml-3 bg-custom-fourth p-2 rounded-full cursor-pointer text-white"></i>
-        </header>
-    )
-}
-
-
-
-export default SidebarMobile
+export default SidebarMobile;
