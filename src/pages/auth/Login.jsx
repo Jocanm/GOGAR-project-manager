@@ -69,7 +69,7 @@ const Login = () => {
                 </section>
                 <ButtonLoading
                     disabled={Object.keys(formData).length === 0}
-                    loading={false}
+                    loading={loading}
                     text='Confirmar'
                 />
             </form>

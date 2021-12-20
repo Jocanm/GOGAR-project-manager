@@ -88,7 +88,8 @@ const ProjectInfoStudent = ({ _id }) => {
     return (
         <div className="text-white flex flex-col">
             <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-md shadow-xl md:px-16 lg:mx-20 relative grid gap-3">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold uppercase" >{data.Proyecto.nombre}</h1>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold">PROYECTO:</h1>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-semibold uppercase" >{data.Proyecto.nombre}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Estado actual - {data.Proyecto.estado}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Fase actual - {data.Proyecto.fase}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Presupuesto - {data.Proyecto.presupuesto}$</div>
@@ -154,19 +155,20 @@ const ProjectInfoLider = ({ _id }) => {
     return (
         <div className="text-white flex flex-col">
             <div className="py-12 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-sm shadow-xl md:px-16 lg:mx-20 relative">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold my-4 uppercase" >{data.Proyecto.nombre}</h1>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold">PROYECTO:</h1>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-semibold my-4 uppercase" >{data.Proyecto.nombre}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-4">Estado actual - {data.Proyecto.estado}</div>
                 <div className="text-xl sm:text-2xl lg:text-3xl font-semibold">Fase actual - {data.Proyecto.fase}</div>
                 <i
                     className="fas fa-undo absolute text-4xl top-10 right-8 text-custom-five cursor-pointer hover:text-custom-fourth"
                     onClick={() => navigate(-1)}
                 ></i>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row justify-between">
                     <button
                         onClick={() => setShow(!show)}
                         className="bg-custom-five hover:bg-custom-fourth px-0 py-2 rounded-sm font-semibold relative top-4 mr-2 w-full"
                     >
-                        Actualizar datos
+                        Actualizar
                     </button>
                     <div className={`w-full ${data.Proyecto.fase === "TERMINADO" && "hidden"}`}>
                         <TerminarProyecto proyecto={data.Proyecto} />
@@ -221,7 +223,7 @@ const MainInfo = ({ _id }) => {
 
     return (
         <div className="py-5 px-10 bg-custom-third mt-8 md:mt-2 mx-4 rounded-sm shadow-xl md:px-16 lg:mx-20 relative">
-            <section className="flex justify-between mb-4">
+            <section className="flex flex-col sm:flex-row justify-between mb-4">
                 <button
                     onClick={() => setShowAvances(false)}
                     className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-sm font-semibold mr-2 w-full">Inscripciones</button>
@@ -381,27 +383,29 @@ const AvanceItem = ({ e, refetch }) => {
     const [value, setValue] = useState(e.descripcion)
 
     const [agregarObs, { data, loading }] = useMutation(AGREGAR_OBSERVACIONES)
-    const [editarDesc,{data: mutationData, loading: mutationLoading}] = useMutation(EDITAR_DESCRIPCION)
+    const [editarDesc, { data: mutationData, loading: mutationLoading }] = useMutation(EDITAR_DESCRIPCION)
 
     const submit = () => {
         agregarObs({ variables: { id: e._id, observaciones: [...e.observaciones, nueva] } })
     }
 
     const submitDesc = () => {
-        editarDesc({variables: {
-            id:e._id,
-            descripcion:value
-        }})
+        editarDesc({
+            variables: {
+                id: e._id,
+                descripcion: value
+            }
+        })
     }
 
     useEffect(() => {
-        if(mutationData && mutationData.editarAvance){
+        if (mutationData && mutationData.editarAvance) {
             toast.success("Avance editado correctamente")
             refetch()
             setShowInput(false)
             setValue(e.descripcion)
         }
-    },[mutationData])
+    }, [mutationData])
 
     useEffect(() => {
         if (data && data.editarAvance) {
@@ -425,20 +429,20 @@ const AvanceItem = ({ e, refetch }) => {
                     (
                         <label className="">
                             <input
-                            className="outline-none rounded-sm border-2"
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                            type="text" />
-                            <button 
-                            onClick={submitDesc}
-                            className="bg-custom-five hover:bg-custom-fourth px-1 border-2 border-custom-fourth"><i className="fas fa-check"></i></button>
+                                className="outline-none rounded-sm border-2"
+                                value={value}
+                                onChange={(e) => setValue(e.target.value)}
+                                type="text" />
+                            <button
+                                onClick={submitDesc}
+                                className="bg-custom-five hover:bg-custom-fourth px-1 border-2 border-custom-fourth"><i className="fas fa-check"></i></button>
                         </label>
                     ) :
                     (
                         <div className={`${showInput && "hidden"}`}>{e.descripcion}</div>
                     )
             }
-            <div className="border-b-2 mb-2">
+            <div className="border-b-2 mb-2 hidden sm:block">
                 <span className="font-bold">Fecha de creacion:</span> {e.fecha}
             </div>
             <div
@@ -524,7 +528,7 @@ const TerminarProyecto = ({ proyecto }) => {
         <>
             <button
                 onClick={() => setOpen(true)}
-                className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-sm font-semibold relative top-4 w-full">{`Terminar proyecto`}<i className="fas fa-exclamation-triangle ml-2"></i>
+                className="bg-custom-five hover:bg-custom-fourth px-4 py-2 rounded-sm font-semibold relative top-4 w-full">{`Terminar`}<i className="fas fa-exclamation-triangle ml-2"></i>
             </button>
             <Dialog
                 open={open}
